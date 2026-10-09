@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>📎 附件管理 - Sofia 记事清单</title>
+    <!-- 霞鹜文楷 WebFont -->
+    <link rel="stylesheet" href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/lxgw-wenkai-webfont/1.1.0/lxgwwenkai-regular.css">
+    <link rel="stylesheet" href="{{ url_for('todo.static', filename='css/styles.css') }}?v={{ static_version }}">
+    <link rel="stylesheet" href="{{ url_for('todo.static', filename='css/attachments.css') }}?v={{ static_version }}">
+    <style>
+        /* 移动端优化：防止页面左右晃动 */
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* 防止内容溢出 */
+        .attachment-page-container,
+        .page-header,
+        .attachment-main-panel,
+        .attachment-body,
+        .upload-area,
+        .attachment-list,
+        .attachment-item {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        /* 移动端优化：防止页面左右晃动 */
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* 防止内容溢出 */
+        .attachment-page-container,
+        .page-header,
+        .attachment-main-panel,
+        .attachment-body,
+        .upload-area,
+        .attachment-list,
+        .attachment-item {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        /* 独立页面专用样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: "LXGW WenKai", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .attachment-page-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .page-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.8rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page-header .task-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .back-button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .attachment-main-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 覆盖对话框样式，使其适应页面布局 */
+        .attachment-body {
+            max-height: none !important;
+        }
+
+        .upload-area {
+            min-height: 180px;
+        }
+
+        .attachment-list {
+            max-height: none !important;
+            min-height: 300px;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            .attachment-page-container {
+                margin: 0.5rem auto;
+                padding: 0 0.5rem;
+                width: 100%;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .page-header h1 {
+                font-size: 1.3rem;
+                flex-wrap: wrap;
+            }
+
+            .page-header .task-info {
+                font-size: 0.85rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .attachment-main-panel {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .back-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+            }
+        }
+
+        /* 小屏手机优化 */
+        @media (max-width: 480px) {
+            .attachment-page-container {
+                padding: 0 0.3rem;
+                margin: 0.3rem auto;
+            }
+
+            .page-header {
+                padding: 0.8rem;
+                border-radius: 10px;
+            }
+
+            .page-header h1 {
+                font-size: 1.1rem;
+            }
+
+            .page-header .task-info {
+                font-size: 0.8rem;
+            }
+
+            .attachment-main-panel {
+                padding: 0.8rem;
+                border-radius: 10px;
+            }
+
+            .back-button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Toast 消息样式 */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #333;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            background: #10b981;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="attachment-page-container">
+        <a href="{{ url_for('todo.index') }}" class="back-button">
+            ← 返回任务列表
+        </a>
+
+        <div class="page-header">
+            <h1>
+                <span>📎</span>
+                <span id="page-title">附件管理</span>
+                <span id="page-attachment-count" style="display: none; margin-left: 0.5rem; font-size: 0.8em; color: #667eea;">(0个附件)</span>
+            </h1>
+            <p class="task-info" id="task-info">加载中...</p>
+        </div>
+
+        <div class="attachment-main-panel">
+            <div class="attachment-body">
+                <!-- 上传区域 -->
+                <div class="upload-area" id="upload-area">
+                    <input type="file" id="attachment-file-input" multiple
+                           accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.txt,.md">
+                    <div class="upload-prompt">
+                        <span class="upload-icon">☁️</span>
+                        <p>点击选择文件或拖拽到这里</p>
+                        <small>支持 图片、PDF、Office文档、压缩包等，单文件最大233MB，一次最多55个文件</small>
+                    </div>
+                    <div class="upload-progress" id="upload-progress" hidden>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span class="progress-text" id="progress-text">上传中...</span>
+                    </div>
+                </div>
+
+                <!-- 附件列表 -->
+                <div class="attachment-list" id="attachment-list">
+                    <div class="empty-state" id="attachment-empty">暂无附件</div>
+                </div>
+
+                <!-- 配额信息 -->
+                <div class="quota-info" id="quota-info">
+                    <div class="quota-bar">
+                        <div class="quota-used" id="quota-used-bar" style="width: 0%"></div>
+                    </div>
+                    <small id="quota-text">已使用 0MB / 500MB (0%)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从URL获取参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const todoId = urlParams.get('todo_id');
+        const userId = urlParams.get('user_id');
+
+        if (!todoId || !userId) {
+            alert('缺少必要参数');
+            window.location.href = '{{ url_for("todo.index") }}';
+        }
+
+        // 将参数传递给附件管理模块
+        window.ATTACHMENT_PAGE_CONFIG = {
+            todoId: todoId,
+            userId: userId
+        };
+
+        // Toast 消息函数
+        window.showToast = function(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        // 加载任务信息
+        async function loadTaskInfo() {
+            try {
+                const response = await fetch(`/todo/api/items?user_id=${userId}`);
+                if (!response.ok) throw new Error('Failed to load tasks');
+
+                const data = await response.json();
+                const task = data.items?.find(t => t.id === todoId);
+
+                if (task) {
+                    document.getElementById('page-title').textContent = `附件管理 - ${task.title}`;
+                    document.getElementById('task-info').textContent = task.title;
+                } else {
+                    document.getElementById('task-info').textContent = '任务未找到';
+                }
+            } catch (error) {
+                console.error('[Attachments Page] Failed to load task info:', error);
+                document.getElementById('task-info').textContent = '加载失败';
+            }
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTaskInfo();
+        });
+    </script>
+
+    <!-- 附件管理功能 -->
+    <script src="{{ url_for('todo.static', filename='js/attachments.js') }}?v={{ static_version }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+/**
+ * 附件管理样式
+ * 版本: v2.1.0 - 移动端优化
+ */
+
+/* ==================== 移动端防溢出优化 ==================== */
+
+/* 确保所有元素不超出屏幕宽度 */
+.attachment-dialog,
+.attachment-header,
+.attachment-body,
+.upload-area,
+.attachment-list,
+.attachment-item,
+.file-info,
+.file-name,
+.quota-info {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 长文件名自动换行 */
+.file-name {
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* 防止小屏幕上的触摸操作被误判为缩放 */
+@media (max-width: 768px) {
+  .attachment-overlay {
+    touch-action: pan-y;
+  }
+
+  .attachment-dialog {
+    touch-action: pan-y;
+  }
+
+  .attachment-list {
+    touch-action: pan-y;
+  }
+
+  /* 禁止附件项双击放大 */
+  .attachment-item {
+    touch-action: manipulation;
+  }
+
+  .file-action-btn {
+    touch-action: manipulation;
+  }
+}
+
+/* ==================== 附件按钮样式 ==================== */
+
+.attachment-btn {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.attachment-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.attachment-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: inline-block;
+  padding: 0px 4px;
+  border-radius: 8px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  min-width: 14px;
+  text-align: center;
+  line-height: 14px;
+  transition: all 0.3s ease;
+}
+
+/* 无附件时：灰色半透明 */
+.attachment-count.empty {
+  background: rgba(150, 150, 150, 0.4);
+  color: rgba(100, 100, 100, 0.8);
+  box-shadow: none;
+}
+
+/* 有附件时：醒目的橙色 */
+.attachment-count.has-files {
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  color: white;
+  box-shadow: 0 2px 4px rgba(255, 87, 34, 0.4);
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* ==================== 附件对话框遮罩 ==================== */
+
+.attachment-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.attachment-overlay[hidden] {
+  display: none;
+}
+
+/* ==================== 附件对话框主体 ==================== */
+
+.attachment-dialog {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 650px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==================== 对话框头部 ==================== */
+
+.attachment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.attachment-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #999;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+/* ==================== 对话框主体内容 ==================== */
+
+.attachment-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ==================== 上传区域 ==================== */
+
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #fafafa;
+  margin-bottom: 1.5rem;
+}
+
+.upload-area:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.upload-area.drag-over {
+  border-color: #4caf50;
+  background: #e8f5e9;
+}
+
+.upload-area input[type="file"] {
+  display: none;
+}
+
+.upload-prompt {
+  pointer-events: none;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.upload-prompt p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.upload-prompt small {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* ==================== 上传进度 ==================== */
+
+.upload-progress {
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  transition: width 0.3s;
+  border-radius: 4px;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ==================== 附件列表 ==================== */
+
+.attachment-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+  transition: all 0.2s;
+  background: white;
+}
+
+.attachment-item:hover {
+  background: #f9f9f9;
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.file-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.file-thumbnail {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+  margin-right: 1rem;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-meta {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.file-action-btn {
+  background: none;
+  border: 1px solid #ddd;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.file-action-btn:hover {
+  background: #f0f0f0;
+  border-color: #bbb;
+}
+
+.file-action-btn.download-btn:hover {
+  background: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.file-action-btn.delete-btn:hover {
+  background: #ffebee;
+  border-color: #f44336;
+}
+
+/* ==================== 配额信息 ==================== */
+
+.quota-info {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.quota-bar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.quota-used {
+  height: 100%;
+  background: #4caf50;
+  transition: width 0.3s, background 0.3s;
+  border-radius: 3px;
+}
+
+.quota-info small {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ==================== 对话框底部 ==================== */
+
+.attachment-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  padding: 0.6rem 1.5rem;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+/* ==================== 响应式设计 ==================== */
+
+/* 平板和大屏手机 */
+@media (max-width: 768px) {
+  .attachment-dialog {
+    width: 96%;
+    max-width: 100%;
+    max-height: 92vh;
+    margin: 0 2%;
+  }
+
+  .attachment-header {
+    padding: 1rem;
+  }
+
+  .attachment-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .attachment-body {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  .upload-area {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .upload-icon {
+    font-size: 2.5rem;
+  }
+
+  .upload-prompt p {
+    font-size: 0.95rem;
+  }
+
+  .upload-prompt small {
+    font-size: 0.8rem;
+  }
+
+  .attachment-item {
+    padding: 0.7rem;
+    flex-wrap: nowrap;
+  }
+
+  .file-icon {
+    font-size: 1.6rem;
+    margin-right: 0.8rem;
+  }
+
+  .file-info {
+    margin-right: 0.8rem;
+    overflow: hidden;
+  }
+
+  .file-name {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  .file-meta {
+    font-size: 0.75rem;
+  }
+
+  .file-actions {
+    gap: 0.4rem;
+  }
+
+  .file-action-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .quota-info {
+    padding: 0.8rem;
+  }
+
+  .quota-info small {
+    font-size: 0.8rem;
+  }
+}
+
+/* 小屏手机 */
+@media (max-width: 480px) {
+  .attachment-dialog {
+    width: 98%;
+    max-height: 95vh;
+    margin: 0 1%;
+    border-radius: 10px;
+  }
+
+  .attachment-header {
+    padding: 0.8rem 1rem;
+  }
+
+  .attachment-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.8rem;
+  }
+
+  .attachment-body {
+    padding: 0.8rem;
+  }
+
+  .upload-area {
+    padding: 1rem 0.8rem;
+  }
+
+  .upload-icon {
+    font-size: 2rem;
+  }
+
+  .upload-prompt p {
+    font-size: 0.85rem;
+  }
+
+  .upload-prompt small {
+    font-size: 0.75rem;
+    display: block;
+    padding: 0 0.5rem;
+  }
+
+  .attachment-item {
+    padding: 0.6rem 0.5rem;
+  }
+
+  .file-icon {
+    font-size: 1.4rem;
+    margin-right: 0.6rem;
+  }
+
+  .file-info {
+    margin-right: 0.5rem;
+  }
+
+  .file-name {
+    font-size: 0.85rem;
+  }
+
+  .file-meta {
+    font-size: 0.7rem;
+  }
+
+  .file-actions {
+    gap: 0.3rem;
+  }
+
+  .file-action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .attachment-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .attachment-count {
+    font-size: 0.7rem;
+    padding: 0.05rem 0.3rem;
+  }
+
+  .quota-info {
+    padding: 0.6rem;
+  }
+
+  .quota-info small {
+    font-size: 0.75rem;
+  }
+}
+
+/* 超小屏设备 */
+@media (max-width: 360px) {
+  .attachment-header h3 {
+    font-size: 1rem;
+  }
+
+  .upload-prompt p {
+    font-size: 0.8rem;
+  }
+
+  .upload-prompt small {
+    font-size: 0.7rem;
+  }
+
+  .file-name {
+    font-size: 0.8rem;
+  }
+
+  .file-meta {
+    font-size: 0.65rem;
+  }
+
+  .file-action-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ==================== 滚动条样式 ==================== */
+
+.attachment-list::-webkit-scrollbar,
+.attachment-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.attachment-list::-webkit-scrollbar-track,
+.attachment-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.attachment-list::-webkit-scrollbar-thumb,
+.attachment-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.attachment-list::-webkit-scrollbar-thumb:hover,
+.attachment-body::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* ==================== Toast 提示样式 ==================== */
+
+.attachment-toast {
+  animation: toastSlideIn 0.3s ease;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

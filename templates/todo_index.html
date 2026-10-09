@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>{{ page_title or "Sofia 记事清单" }}</title>
+    <link rel="stylesheet" href="{{ url_for('todo.static', filename='css/styles.css') }}?v={{ static_version }}" />
+    <link rel="stylesheet" href="{{ url_for('todo.static', filename='css/attachments.css') }}?v={{ static_version }}" />
+  </head>
+  <body>
+    <!-- 加载指示器 -->
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">加载中...</div>
+      <div class="loading-hint">正在获取您的任务数据</div>
+    </div>
+
+    <!-- 用户ID输入对话框 -->
+    <div class="user-id-overlay" id="user-id-overlay" hidden>
+      <div class="user-id-dialog">
+        <h2>用户信息</h2>
+        <div class="current-user-info" id="current-user-info" hidden>
+          <p><strong>当前昵称：</strong><span id="current-nickname">未设置</span></p>
+          <p><strong>当前ID：</strong><span id="current-user-id">未登录</span></p>
+          <button type="button" id="copy-user-id-btn" class="copy-id-btn">复制ID</button>
+          <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--panel-border);">
+        </div>
+        <p class="user-id-hint" id="user-id-hint-new">
+          <strong>首次使用：</strong>请输入至少8位字母或数字作为ID指纹，用于跨设备同步，请记住该组合，不要泄露。
+        </p>
+        <p class="user-id-hint" id="user-id-hint-switch" hidden>
+          <strong>切换用户：</strong>输入其他用户的ID即可切换。切换后将显示该用户的任务，您的数据不会丢失，可随时切换回来。
+        </p>
+        <form id="user-id-form" autocomplete="off">
+          <input
+            id="user-id-input"
+            type="text"
+            inputmode="latin"
+            pattern="[A-Za-z0-9]{8,}"
+            maxlength="32"
+            placeholder="例如：sofia2025"
+            required
+          />
+          <p class="user-id-error" id="user-id-error" hidden></p>
+          <div class="user-id-actions">
+            <button type="submit">确认</button>
+            <button type="button" id="user-id-cancel" hidden>取消</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 管理员登录对话框 -->
+    <div class="admin-overlay" id="admin-overlay" hidden>
+      <div class="admin-dialog">
+        <h2>管理员登录</h2>
+        <p class="admin-hint">请输入管理员密码</p>
+        <form id="admin-login-form" autocomplete="off">
+          <input
+            type="text"
+            name="username"
+            autocomplete="username"
+            style="display: none;"
+            aria-hidden="true"
+            tabindex="-1"
+          />
+          <input
+            id="admin-password-input"
+            type="password"
+            placeholder="请输入密码"
+            autocomplete="current-password"
+            required
+          />
+          <p class="admin-error" id="admin-error" hidden></p>
+          <div class="admin-actions">
+            <button type="submit">登录</button>
+            <button type="button" id="admin-cancel">取消</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 管理员面板 -->
+    <div class="admin-panel-overlay" id="admin-panel-overlay" hidden>
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h2>用户管理</h2>
+          <button type="button" id="admin-close-btn" class="admin-close-btn">×</button>
+        </div>
+        <div class="admin-panel-body">
+          <div class="admin-stats">
+            <span id="admin-total-users">总用户数: 0</span>
+          </div>
+          <div class="admin-user-list" id="admin-user-list">
+            <!-- 用户列表将通过JavaScript动态生成 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 用户数据浏览对话框 -->
+    <div class="user-data-view-overlay" id="user-data-view-overlay" hidden>
+      <div class="user-data-view-dialog">
+        <div class="user-data-view-header">
+          <h2>用户数据浏览</h2>
+          <button type="button" id="user-data-view-close" class="admin-close-btn">×</button>
+        </div>
+        <div class="user-data-view-body">
+          <div class="user-data-info">
+            <div class="user-data-row">
+              <span class="user-data-label">用户ID:</span>
+              <span class="user-data-value" id="view-user-id">-</span>
+            </div>
+            <div class="user-data-row">
+              <span class="user-data-label">昵称:</span>
+              <span class="user-data-value" id="view-user-nickname">-</span>
+            </div>
+            <div class="user-data-row">
+              <span class="user-data-label">任务总数:</span>
+              <span class="user-data-value" id="view-task-count">0</span>
+            </div>
+          </div>
+          <div class="user-data-tasks">
+            <h3>任务列表</h3>
+            <div class="view-task-list" id="view-task-list">
+              <!-- 任务列表将通过JavaScript动态生成 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	<!-- 分享方式选择弹出菜单 -->
+	<div class="share-choice-menu" id="share-choice-menu" hidden>
+	  <button type="button" class="share-choice-item" id="share-to-app-btn">
+		<span class="share-choice-icon">📤</span>
+		<span class="share-choice-text">任务分享</span>
+	  </button>
+	  <button type="button" class="share-choice-item" id="collaborate-share-btn">
+		<span class="share-choice-icon">👥</span>
+		<span class="share-choice-text">任务协作</span>
+	  </button>
+	  <button type="button" class="share-choice-item" id="share-to-wechat-btn">
+		<span class="share-choice-icon">📋</span>
+		<span class="share-choice-text">任务复制</span>
+	  </button>
+	</div>
+
+
+	<!-- 分享任务对话框 -->
+	<div class="share-overlay" id="share-overlay" hidden>
+	  <div class="share-dialog">
+		<h2>分享任务</h2>
+
+		<div class="share-tips">
+		  • 您的昵称：<span class="my-nickname" id="my-nickname">未设置</span><br>
+
+		</div>
+
+		<!-- 关闭原生校验，交由后端/JS 校验 -->
+		<form id="share-form" autocomplete="off" novalidate>
+		  <label for="share-target-user">选择分享对象（最多3个）</label>
+
+		  <!-- 已选择的用户标签区域 -->
+		  <div id="selected-users-container" class="selected-users-container"></div>
+
+		  <!-- 输入框 + 下拉列表 -->
+		  <div class="share-input-wrapper">
+			<input
+			  id="share-target-user"
+			  type="text"
+			  placeholder="输入昵称或ID进行分享"
+			  autocomplete="off"
+			  aria-label="搜索用户"
+			/>
+			<div id="user-dropdown" class="user-dropdown" hidden></div>
+		  </div>
+
+		  <p class="share-error" id="share-error" hidden></p>
+
+		  <!-- 附件信息 -->
+		  <div id="share-attachment-info" class="share-attachment-info" hidden>
+			<div class="attachment-info-header">
+			  <span class="attachment-icon">📎</span>
+			  <span class="attachment-text">此任务包含 <span id="share-attachment-count">0</span> 个附件</span>
+			</div>
+			<div class="attachment-info-details" id="share-attachment-details"></div>
+			<p class="attachment-info-note">💡 分享时将自动复制所有附件给接收者</p>
+		  </div>
+
+		  <!-- 署名/匿名选项 -->
+		  <div class="share-signature-options">
+			<label class="signature-label">分享方式：</label>
+			<div class="signature-radios">
+			  <label class="signature-option">
+				<input
+				  type="radio"
+				  name="share-signature"
+				  value="signed"
+				  id="share-signature-signed"
+				  checked
+				  aria-label="署名"
+				/>
+				<span>署名</span>
+				<span class="signature-hint"></span>
+			  </label>
+			  <label class="signature-option">
+				<input
+				  type="radio"
+				  name="share-signature"
+				  value="anonymous"
+				  id="share-signature-anonymous"
+				  aria-label="匿名"
+				/>
+				<span>匿名</span>
+				<span class="signature-hint"></span>
+			  </label>
+			</div>
+		  </div>
+
+		  <!-- 分享进度条 -->
+		  <div id="share-progress-container" class="share-progress-container" hidden>
+			<div class="progress-header">
+			  <span class="progress-label">正在分享...</span>
+			  <span class="progress-count" id="share-progress-count">0 / 0</span>
+			</div>
+			<div class="progress-bar-bg">
+			  <div class="progress-bar-fill" id="share-progress-bar"></div>
+			</div>
+			<div class="progress-status" id="share-progress-status">准备中...</div>
+		  </div>
+
+		  <!-- 撤回上次分享提示 -->
+		  <div id="share-history-hint" class="share-history-hint" hidden>
+			<p class="history-info">
+			  <span class="history-icon">ℹ️</span>
+			  <span class="history-text">检测到上次分享记录（<span id="share-history-count">0</span>人）</span>
+			</p>
+			<div class="share-history-actions">
+			  <button type="button" id="revoke-share-btn" class="revoke-share-btn">
+				<span class="revoke-icon">↩️</span>
+				<span class="revoke-text">撤回上次分享</span>
+			  </button>
+			  <button type="button" id="refresh-history-btn" class="refresh-history-btn">
+				<span class="refresh-icon">🔄</span>
+				<span class="refresh-text">刷新记录</span>
+			  </button>
+			</div>
+		  </div>
+		  <div class="share-actions">
+			<button type="submit" id="share-submit-btn">确认分享</button>
+			<button type="button" id="share-cancel">取消</button>
+		  </div>
+		</form>
+	  </div>
+	</div>
+
+    <!-- 固定标题栏 -->
+    <div class="title-row">
+      <button type="button" id="header-collapse-toggle" class="header-collapse-btn" aria-label="折叠/展开">
+        <span class="collapse-icon">▼</span>
+      </button>
+      <h1>{{ page_title or "Sofia 记事清单" }} <span class="version-small">{{ version or "v1.0" }}</span></h1>
+    </div>
+
+    <main class="todo-app">
+      <section class="todo-panel">
+        <header class="panel-header">
+          <div class="header-text">
+            <div id="collapsible-content" class="collapsible-content">
+              <div class="meta-date-container">
+                <span class="today-badge" id="today-label" aria-label="今天"></span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                <a
+                  class="platform-link"
+                  href="http://fjzxedu.top:5002"
+                  target="_blank"
+                  rel="noopener"
+                  >Sofia数智平台</a
+                >
+                <a
+                  class="platform-link"
+                  href="{{ url_for('todo.collaborate_page') }}"
+                  >协作管理</a
+                >
+                <a
+                  class="platform-link"
+                  href="{{ url_for('todo.help') }}"
+                  target="_blank"
+                  rel="noopener"
+
+                  >使用帮助</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+        <div id="collapsible-controls" class="collapsible-controls">
+        <div class="action-buttons">
+          <button
+            type="button"
+            id="admin-login-btn"
+            class="admin-login-btn"
+            aria-label="管理员登录"
+          >
+            管理员登录
+          </button>
+          <button
+            type="button"
+            class="refresh-btn"
+            id="refresh-btn"
+            aria-label="刷新任务列表"
+            title="刷新任务列表"
+          >
+            刷新
+          </button>
+        </div>
+        <!-- 自动折叠选项 -->
+        <div class="auto-collapse-options" style="display: flex; gap: 0.5rem; align-items: center; justify-content: center; flex-wrap: wrap; padding: 0.5rem 0; border-top: 1px solid var(--panel-border); border-bottom: 1px solid var(--panel-border); margin: 0.5rem 0;">
+          <label style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.875rem; color: var(--text-main); cursor: pointer;">
+            <input type="checkbox" id="auto-collapse-enable" checked style="cursor: pointer; accent-color: var(--primary);">
+            <span>自动折叠</span>
+          </label>
+          <select id="auto-collapse-seconds" style="padding: 0.3rem 0.6rem; border-radius: 8px; border: 1px solid var(--panel-border); background: var(--bg-accent); color: var(--text-main); font-size: 0.875rem; cursor: pointer;">
+            <option value="3">3秒</option>
+            <option value="5" selected>5秒</option>
+            <option value="8">8秒</option>
+            <option value="13">13秒</option>
+            <option value="21">21秒</option>
+            <option value="34">34秒</option>
+          </select>
+          <button type="button" id="auto-collapse-apply" style="padding: 0.3rem 0.8rem; border-radius: 8px; border: 1px solid var(--primary); background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; font-size: 0.875rem; cursor: pointer; font-weight: 600;">
+            应用
+          </button>
+          <!-- 分隔符 -->
+          <span style="color: var(--panel-border); margin: 0 0.3rem;">|</span>
+          <!-- 自动同步设置 -->
+          <label style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.875rem; color: var(--text-main);">
+            <span>自动同步</span>
+          </label>
+          <select id="poll-interval-select" style="padding: 0.3rem 0.6rem; border-radius: 8px; border: 1px solid var(--panel-border); background: var(--bg-accent); color: var(--text-main); font-size: 0.875rem; cursor: pointer;">
+            <option value="0">关闭</option>
+            <option value="15">15秒</option>
+            <option value="30" selected>30秒</option>
+            <option value="60">1分钟</option>
+            <option value="120">2分钟</option>
+            <option value="300">5分钟</option>
+          </select>
+        </div>
+        <div class="controls">
+          <div class="filters" role="group" aria-label="筛选任务">
+            <button type="button" data-filter="all" class="active">全部</button>
+            <button type="button" data-filter="active">进行中</button>
+            <button type="button" data-filter="completed">已完成</button>
+          </div>
+          <div class="stats">
+            <span id="todo-count">0 个任务待完成</span>
+            <button type="button" id="clear-completed" class="subtle">
+              隐藏已完成
+            </button>
+          </div>
+        </div>
+        </div>
+        <form id="todo-form" autocomplete="off" hidden>
+          <input
+            id="todo-input"
+            type="text"
+            placeholder="输入任务标题..."
+            aria-label="任务标题"
+          />
+          <textarea
+            id="todo-content"
+            placeholder="补充任务内容（可选）..."
+            aria-label="任务内容"
+            rows="3"
+          ></textarea>
+          <div class="start-group" id="todo-start-group">
+            <label class="start-field" for="todo-start-date">
+              <span>开始日期</span>
+              <input type="date" id="todo-start-date" aria-label="开始日期" />
+            </label>
+            <label class="start-field" for="todo-start-time">
+              <span>开始时间</span>
+              <input
+                type="time"
+                id="todo-start-time"
+                step="60"
+                aria-label="开始时间"
+              />
+            </label>
+          </div>
+          <div class="repeat-options">
+            <label class="repeat-option">
+              <input
+                type="radio"
+                name="repeat-mode"
+                value="none"
+                id="todo-repeat-none"
+                checked
+                aria-label="不重复"
+              />
+              <span>不重复</span>
+            </label>
+            <label class="repeat-option">
+              <input
+                type="radio"
+                name="repeat-mode"
+                value="daily"
+                id="todo-repeat-daily"
+                aria-label="日重复"
+              />
+              <span>日重复</span>
+            </label>
+            <label class="repeat-option">
+              <input
+                type="radio"
+                name="repeat-mode"
+                value="custom"
+                id="todo-repeat-custom"
+                aria-label="自定义"
+              />
+              <span>自定义</span>
+            </label>
+          </div>
+
+          <div class="custom-repeat-panel" id="custom-repeat-panel" hidden>
+            <div class="custom-repeat-row">
+              <label class="custom-repeat-field">
+                <span>间隔类型</span>
+                <select id="todo-repeat-preset" aria-label="间隔类型">
+                  <option value="168">每周重复 (168小时)</option>
+                  <option value="720">每月重复 (720小时)</option>
+                  <option value="custom">自定义间隔</option>
+                </select>
+              </label>
+              <label class="custom-repeat-field" id="custom-hours-field" hidden>
+                <span>自定义小时数</span>
+                <input
+                  type="number"
+                  id="todo-repeat-hours"
+                  min="1"
+                  max="8760"
+                  value="1"
+                  aria-label="重复间隔小时数"
+                />
+              </label>
+              <div class="repeat-hints" id="repeat-hints">
+                <span class="hint-label">提示：</span>
+                <span class="hint-value" id="repeat-hint-weekly">每周 7 次</span>
+                <span class="hint-separator">|</span>
+                <span class="hint-value" id="repeat-hint-monthly">每月 30 次</span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 置顶选项 -->
+          <div class="pin-option-group">
+            <label class="pin-option-label">
+              <input
+                type="checkbox"
+                id="todo-pin-new"
+                checked
+                aria-label="新任务置顶"
+              />
+              <span class="pin-option-text">📌 新任务置顶</span>
+              <span class="pin-option-hint">（默认将新任务固定在列表顶部）</span>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <div class="form-buttons">
+              <button type="submit" class="form-confirm">确认</button>
+              <button type="button" id="form-cancel" class="form-cancel">取消</button>
+            </div>
+          </div>
+        </form>
+        <div class="search-container">
+          <input
+            id="todo-search"
+            type="search"
+            placeholder="搜索任务（空格分隔多关键词）"
+            aria-label="搜索任务"
+            autocomplete="off"
+          />
+          <button
+            type="button"
+            class="show-completed-btn"
+            id="show-completed-btn"
+            aria-label="显示/隐藏已完成"
+            title="H=隐藏已完成 A=显示已完成"
+          >
+            H
+          </button>
+          <button
+            type="button"
+            class="filter-cycle-btn"
+            id="filter-cycle-btn"
+            aria-label="筛选切换"
+            title="点击切换筛选：全部/进行/完成"
+          >
+            全部
+          </button>
+          <button
+            type="button"
+            class="form-toggle"
+            id="form-toggle"
+            aria-expanded="false"
+            aria-controls="todo-form"
+          >
+            新任务
+          </button>
+        </div>
+        <ul id="todo-list" aria-live="polite"></ul>
+      </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="app-footer">
+      <p class="footer-developer">
+        {{ developer or "枫中数智化研发组" }} |
+        <a href="mailto:lusunrise@126.com" class="footer-email">lusunrise@126.com</a>
+      </p>
+    </footer>
+
+    <template id="todo-item-template">
+      <li class="todo-item">
+        <div class="checkbox">
+          <input type="checkbox" class="todo-toggle" />
+          <span class="custom-checkbox" aria-hidden="true"></span>
+        </div>
+        <div class="todo-details">
+          <div class="todo-header">
+            <span class="todo-title"></span>
+            <time class="todo-date" aria-label="创建时间"></time>
+            <span class="todo-repeat-badge" aria-hidden="true" hidden>重复</span>
+            <label class="pin-toggle" title="置顶任务">
+              <input type="checkbox" class="todo-pin" />
+              <span class="pin-switch">
+                <span class="pin-slider"></span>
+              </span>
+              <span class="pin-label">置顶</span>
+            </label>
+            <div class="font-size-control" title="字体大小">
+		  	  <button
+			    type="button"
+			    class="font-size-btn font-size-cycle active"
+			    data-size="medium"
+			    aria-label="字体大小：中"
+			  >
+			    中
+			  </button>
+            </div>
+            <div class="line-order-control" title="行顺序">
+				<button
+				  type="button"
+				  class="line-order-btn line-order-cycle active"
+				  data-order="normal"
+				  aria-label="行顺序：正序"
+				>
+				  ↓
+				</button>
+			  
+            </div>
+            <button type="button" class="fullscreen-toggle-btn" aria-label="全屏显示" title="全屏显示">⛶</button>
+          </div>
+          <p class="todo-content"></p>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="attachment-btn" aria-label="附件管理" data-todo-id="">
+            附件<sup class="attachment-count">0</sup>
+          </button>
+          <button type="button" class="share-btn" aria-label="分享任务">
+            分享
+          </button>
+          <button type="button" class="edit-btn" aria-label="编辑任务">
+            编辑
+          </button>
+          <button type="button" class="delete-btn" aria-label="删除任务">
+            删除
+          </button>
+          <button type="button" class="fullscreen-toggle-btn fullscreen-toggle-btn-bottom" aria-label="全屏显示" title="全屏显示">⛶</button>
+        </div>
+      </li>
+    </template>
+
+    <!-- 删除确认对话框 -->
+    <div class="delete-confirm-overlay" id="delete-confirm-overlay" hidden>
+      <div class="delete-confirm-dialog">
+        <h3>🗑️ 确认删除</h3>
+        <p id="delete-confirm-message">确定要删除此任务吗？</p>
+        <div id="delete-attachment-info" class="delete-attachment-info" hidden>
+          <p>📎 此任务包含 <strong id="delete-attachment-count">0</strong> 个附件</p>
+          <label class="delete-files-option">
+            <input type="checkbox" id="delete-files-checkbox">
+            <span>同时删除附件文件（不可恢复）</span>
+          </label>
+          <p class="delete-files-hint">不勾选则仅删除任务，保留附件文件</p>
+        </div>
+        <div class="delete-confirm-actions">
+          <button type="button" id="delete-confirm-btn" class="danger-btn">删除</button>
+          <button type="button" id="delete-cancel-btn" class="cancel-btn">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 附件管理对话框 -->
+    <div class="attachment-overlay" id="attachment-overlay" hidden>
+      <div class="attachment-dialog">
+        <div class="attachment-header">
+          <h3>📎 管理附件</h3>
+          <button type="button" class="close-btn" id="attachment-close-btn" aria-label="关闭">×</button>
+        </div>
+        <div class="attachment-body">
+          <div class="upload-area" id="upload-area">
+            <input type="file" id="attachment-file-input" multiple
+                   accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.txt,.md">
+            <div class="upload-prompt">
+              <span class="upload-icon">☁️</span>
+              <p>点击选择文件或拖拽到这里</p>
+              <small>支持 图片、PDF、Office文档、压缩包等，单文件最大50MB</small>
+            </div>
+            <div class="upload-progress" id="upload-progress" hidden>
+              <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+              <span class="progress-text" id="progress-text">上传中...</span>
+            </div>
+          </div>
+          <div class="attachment-list" id="attachment-list">
+            <div class="empty-state" id="attachment-empty">暂无附件</div>
+          </div>
+          <div class="quota-info" id="quota-info">
+            <div class="quota-bar">
+              <div class="quota-used" id="quota-used-bar" style="width: 0%"></div>
+            </div>
+            <small id="quota-text">已使用 0MB / 5GB (0%)</small>
+          </div>
+        </div>
+        <div class="attachment-footer">
+          <button type="button" id="attachment-cancel-btn" class="cancel-btn">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Markdown解析库 - 使用国内CDN -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <!-- 分享撤回功能 -->
+    <script
+      src="{{ url_for('todo.static', filename='js/share-revoke.js') }}?v={{ static_version }}"
+      defer
+    ></script>
+    <!-- 分享附件信息显示 -->
+    <script
+      src="{{ url_for('todo.static', filename='js/share-attachments.js') }}?v={{ static_version }}"
+      defer
+    ></script>
+    <!-- 附件管理功能 -->
+    <script
+      src="{{ url_for('todo.static', filename='js/attachments.js') }}?v={{ static_version }}"
+      defer
+    ></script>
+    <script
+      src="{{ url_for('todo.static', filename='js/app.js') }}?v={{ static_version }}"
+      defer
+    ></script>
+  </body>
+</html>

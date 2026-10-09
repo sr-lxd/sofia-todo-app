@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>设置昵称 - Sofia 记事清单</title>
+    <!-- 霞鹜文楷 WebFont -->
+    <link
+      rel="stylesheet"
+      href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/lxgw-wenkai-webfont/1.1.0/lxgwwenkai-regular.css"
+    />
+    <style>
+      :root {
+        --primary: #4a90e2;
+        --primary-hover: #357abd;
+        --danger: #e74c3c;
+        --danger-hover: #c0392b;
+        --text: #333;
+        --text-light: #666;
+        --bg: #f5f5f5;
+        --panel-bg: #fff;
+        --panel-border: #ddd;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --text: #e0e0e0;
+          --text-light: #aaa;
+          --bg: #1a1a1a;
+          --panel-bg: #2a2a2a;
+          --panel-border: #444;
+          --shadow: rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "LXGW WenKai", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+      }
+
+      .nickname-container {
+        background: var(--panel-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px var(--shadow);
+        padding: 2rem;
+        max-width: 480px;
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        text-align: center;
+      }
+
+      .nickname-hint {
+        font-size: 0.95rem;
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .user-info {
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+      }
+
+      .user-info p {
+        margin: 0.5rem 0;
+        color: var(--text-light);
+      }
+
+      .user-info strong {
+        color: var(--text);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+      }
+
+      input[type="text"] {
+        font-family: inherit;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--panel-border);
+        border-radius: 8px;
+        background: var(--panel-bg);
+        color: var(--text);
+        transition: border-color 0.2s;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .error-message {
+        color: var(--danger);
+        font-size: 0.9rem;
+        margin-top: -0.5rem;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+
+      button {
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex: 1;
+      }
+
+      button[type="submit"] {
+        background: var(--primary);
+        color: white;
+      }
+
+      button[type="submit"]:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+
+      button[type="submit"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      button[type="button"] {
+        background: var(--panel-border);
+        color: var(--text);
+      }
+
+      button[type="button"]:hover {
+        background: var(--text-light);
+        color: white;
+      }
+
+      .success-message {
+        text-align: center;
+        padding: 2rem;
+        display: none;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      .success-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .success-message h2 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      .success-message p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+
+      .loading {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      @media (max-width: 480px) {
+        .nickname-container {
+          padding: 1.5rem;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .button-group {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nickname-container">
+      <div id="form-section">
+        <h1>设置昵称</h1>
+        <p class="nickname-hint">
+          昵称用于在分享时标识您的身份，方便他人识别。昵称可以随时修改。
+        </p>
+
+        <div class="user-info">
+          <p><strong>当前用户ID：</strong><span id="current-user-id">加载中...</span></p>
+          <p><strong>当前昵称：</strong><span id="current-nickname">未设置</span></p>
+        </div>
+
+        <form id="nickname-form" autocomplete="off">
+          <div>
+            <label for="nickname-input">昵称</label>
+            <input
+              id="nickname-input"
+              type="text"
+              placeholder="请输入您的昵称（最多32字符）"
+              maxlength="32"
+              required
+              autofocus
+            />
+          </div>
+          <p class="error-message" id="error-message"></p>
+
+          <div class="button-group">
+            <button type="submit" id="submit-btn">确认</button>
+            <button type="button" id="cancel-btn">取消</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="success-message" id="success-section">
+        <div class="success-icon">✓</div>
+        <h2>昵称设置成功！</h2>
+        <p>窗口将在 <span id="countdown">3</span> 秒后自动关闭...</p>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const nicknameForm = document.getElementById('nickname-form');
+        const nicknameInput = document.getElementById('nickname-input');
+        const errorMessage = document.getElementById('error-message');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const currentUserIdSpan = document.getElementById('current-user-id');
+        const currentNicknameSpan = document.getElementById('current-nickname');
+        const formSection = document.getElementById('form-section');
+        const successSection = document.getElementById('success-section');
+        const countdownSpan = document.getElementById('countdown');
+
+        // 从URL参数获取配置
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+        const isRequired = urlParams.get('required') === 'true';
+        const basePath = urlParams.get('base_path') || '/todo';
+
+        // 构建API端点
+        const profileEndpoint = `${basePath}/api/profile`;
+        const nicknameEndpoint = `${basePath}/api/nickname`;
+
+        // 如果没有userId，显示错误
+        if (!userId) {
+          showError('缺少用户ID参数，请重新打开');
+          submitBtn.disabled = true;
+          return;
+        }
+
+        // 如果是必须设置，隐藏取消按钮
+        if (isRequired) {
+          cancelBtn.style.display = 'none';
+        }
+
+        // 加载用户资料
+        loadUserProfile();
+
+        // 取消按钮 - 关闭窗口
+        cancelBtn.addEventListener('click', () => {
+          if (window.opener) {
+            window.opener.postMessage({ type: 'nickname-cancelled' }, '*');
+          }
+          window.close();
+        });
+
+        // 表单提交
+        nicknameForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          await handleSubmit();
+        });
+
+        // 加载用户资料
+        async function loadUserProfile() {
+          try {
+            const response = await fetch(`${profileEndpoint}?user_id=${userId}`, {
+              method: 'GET',
+              credentials: 'same-origin',
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              currentUserIdSpan.textContent = userId;
+              currentNicknameSpan.textContent = data.nickname || '未设置';
+
+              // 如果有昵称，预填充
+              if (data.nickname) {
+                nicknameInput.value = data.nickname;
+              }
+            } else {
+              currentUserIdSpan.textContent = userId;
+              currentNicknameSpan.textContent = '加载失败';
+            }
+          } catch (error) {
+            console.error('Failed to load profile:', error);
+            currentUserIdSpan.textContent = userId;
+            currentNicknameSpan.textContent = '加载失败';
+          }
+        }
+
+        // 提交昵称
+        async function handleSubmit() {
+          const nickname = nicknameInput.value.trim();
+
+          // 验证
+          if (!nickname) {
+            showError('昵称不能为空');
+            return;
+          }
+
+          if (nickname.length > 32) {
+            showError('昵称长度不能超过32个字符');
+            return;
+          }
+
+          // 禁用表单
+          setLoading(true);
+          hideError();
+
+          try {
+            const response = await fetch(`${nicknameEndpoint}?user_id=${userId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'same-origin',
+              body: JSON.stringify({ nickname }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.status === 'ok') {
+              // 成功 - 通知父窗口并显示成功消息
+              if (window.opener) {
+                window.opener.postMessage({
+                  type: 'nickname-updated',
+                  nickname: nickname
+                }, '*');
+              }
+
+              showSuccess();
+            } else {
+              showError(data.msg || '设置昵称失败，请重试');
+              setLoading(false);
+            }
+          } catch (error) {
+            console.error('Failed to update nickname:', error);
+            showError('网络错误，请检查连接后重试');
+            setLoading(false);
+          }
+        }
+
+        // 显示错误
+        function showError(message) {
+          errorMessage.textContent = message;
+          errorMessage.classList.add('show');
+        }
+
+        // 隐藏错误
+        function hideError() {
+          errorMessage.classList.remove('show');
+        }
+
+        // 设置加载状态
+        function setLoading(loading) {
+          if (loading) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            nicknameInput.disabled = true;
+            cancelBtn.disabled = true;
+          } else {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '确认';
+            nicknameInput.disabled = false;
+            cancelBtn.disabled = false;
+          }
+        }
+
+        // 显示成功消息并倒计时关闭
+        function showSuccess() {
+          formSection.style.display = 'none';
+          successSection.classList.add('show');
+
+          let countdown = 3;
+          const timer = setInterval(() => {
+            countdown--;
+            countdownSpan.textContent = countdown;
+
+            if (countdown <= 0) {
+              clearInterval(timer);
+              window.close();
+            }
+          }, 1000);
+        }
+      })();
+    </script>
+  </body>
+</html>

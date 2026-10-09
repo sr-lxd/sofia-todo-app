@@ -1,0 +1,6282 @@
+/* 自定义字体引入 */
+@font-face {
+  font-family: 'SourceHanSansCN';
+  src: url('/todo/static/fonts/SourceHanSansCN-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SourceHanSansCN';
+  src: url('/todo/static/fonts/SourceHanSansCN-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --badge-font-size: 0.80rem;
+  color-scheme: light dark;
+  font-size: 16px;
+  font-family: "SourceHanSansCN", "PingFang SC", "Microsoft YaHei", system-ui,
+    -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  --bg: #eef1ff;
+  --bg-accent: #f7f5ff;
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --panel-border: rgba(102, 112, 255, 0.25);
+  --primary: #5146ff;
+  --primary-dark: #3b31d8;
+  --muted: #6c728b;
+  --text-main: #121428;
+  --shadow: rgba(80, 86, 139, 0.15);
+  --success: #38c985;
+  --danger: #ef5f7a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  --badge-font-size: 0.80rem;
+    --bg: #070a1a;
+    --bg-accent: rgba(60, 76, 255, 0.08);
+    --panel-bg: rgba(18, 22, 46, 0.92);
+    --panel-border: rgba(133, 140, 255, 0.35);
+    --primary: #8d88ff;
+    --primary-dark: #b0acff;
+    --muted: #8f96c4;
+    --text-main: #f4f6ff;
+    --shadow: rgba(4, 6, 18, 0.45);
+  }
+
+  /* 黑暗模式下的特殊样式修正 */
+  .filters button.active {
+    background: rgba(81, 70, 255, 0.25);
+    color: #f4f6ff;
+  }
+
+  .item-actions button {
+    background: rgba(18, 22, 46, 0.8);
+    color: #8d88ff;
+    border-color: rgba(133, 140, 255, 0.3);
+  }
+
+  .item-actions button:hover {
+    background: rgba(81, 70, 255, 0.3);
+    border-color: rgba(133, 140, 255, 0.5);
+  }
+
+  .custom-checkbox {
+    background: rgba(18, 22, 46, 0.8);
+    border-color: rgba(133, 140, 255, 0.5);
+  }
+
+  .todo-edit-input,
+  .start-field input,
+  .todo-edit-start-field input,
+  #todo-form input,
+  #todo-form textarea,
+  #todo-search,
+  #user-id-input {
+    background: rgba(18, 22, 46, 0.95);
+    color: #ffffff;
+    border-color: rgba(133, 140, 255, 0.5);
+  }
+
+  .todo-empty {
+    background: rgba(18, 22, 46, 0.5);
+    border-color: rgba(133, 140, 255, 0.3);
+  }
+
+  body {
+    background: radial-gradient(circle at 20% 20%, #0a0d1f 0%, var(--bg) 60%);
+  }
+
+  .todo-panel {
+    background: linear-gradient(135deg, var(--panel-bg), rgba(18, 22, 46, 0.85));
+  }
+
+  .todo-item {
+    background: linear-gradient(120deg, rgba(18, 22, 46, 0.95), var(--bg-accent));
+    border-color: rgba(133, 140, 255, 0.25);
+  }
+
+  #todo-form {
+    background: linear-gradient(
+      135deg,
+      rgba(60, 50, 20, 0.85),
+      rgba(45, 38, 15, 0.9)
+    );
+    border-color: rgba(255, 193, 7, 0.5);
+    box-shadow: 0 8px 24px rgba(255, 193, 7, 0.2);
+  }
+
+  .user-id-dialog {
+    background: linear-gradient(135deg, var(--panel-bg), rgba(18, 22, 46, 0.95));
+  }
+
+  .form-toggle[aria-expanded="true"] {
+    background: linear-gradient(135deg, rgba(18, 22, 46, 0.8), rgba(30, 35, 60, 0.9));
+    color: #8d88ff;
+    border-color: rgba(133, 140, 255, 0.4);
+  }
+
+  .todo-item.editing {
+    background: linear-gradient(
+      135deg,
+      rgba(80, 60, 20, 0.95),
+      rgba(70, 50, 15, 0.98)
+    );
+    border: 2px solid rgba(255, 165, 0, 0.7);
+    box-shadow: 0 20px 60px rgba(255, 165, 0, 0.4),
+                0 0 0 4px rgba(255, 193, 7, 0.2);
+  }
+
+  .todo-item.editing::before {
+    background: linear-gradient(180deg, #ff9800, rgba(255, 152, 0, 0.7));
+  }
+
+  /* 暗色模式下编辑状态的输入框 */
+  .todo-item.editing .todo-edit-input {
+    background: rgba(60, 50, 20, 0.6);
+    border-color: rgba(255, 165, 0, 0.5);
+    color: #f4f6ff;
+  }
+
+  .todo-item.editing .todo-edit-input:focus {
+    background: rgba(70, 55, 20, 0.75);
+    border-color: rgba(255, 165, 0, 0.8);
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.25);
+  }
+
+  .todo-item.editing .start-field input {
+    background: rgba(60, 50, 20, 0.6);
+    border-color: rgba(255, 165, 0, 0.5);
+    color: #f4f6ff;
+  }
+
+  .todo-item.editing .start-field input:focus {
+    background: rgba(70, 55, 20, 0.75);
+    border-color: rgba(255, 165, 0, 0.8);
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.25);
+  }
+
+  .todo-item.editing .repeat-option {
+    background: rgba(60, 50, 20, 0.5);
+    border-color: rgba(255, 165, 0, 0.5);
+  }
+
+  .todo-item.editing .repeat-option:hover {
+    background: rgba(70, 55, 20, 0.7);
+    border-color: rgba(255, 165, 0, 0.8);
+  }
+
+  .todo-item.editing .custom-repeat-panel {
+    background: rgba(50, 40, 15, 0.5);
+    border-color: rgba(255, 165, 0, 0.4);
+  }
+
+  .custom-repeat-field select {
+    background: linear-gradient(135deg, rgba(18, 22, 46, 0.9), rgba(30, 35, 60, 0.85));
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238d88ff' d='M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 12px;
+    border-color: rgba(133, 140, 255, 0.4);
+    color: #f4f6ff;
+    box-shadow: 0 2px 8px rgba(133, 140, 255, 0.1);
+  }
+
+  .custom-repeat-field select:hover {
+    background: linear-gradient(135deg, rgba(30, 35, 60, 0.95), rgba(40, 45, 75, 0.9));
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(133, 140, 255, 0.2);
+  }
+
+  .custom-repeat-field select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(141, 136, 255, 0.25), 0 4px 12px rgba(133, 140, 255, 0.2);
+  }
+
+  .title-row {
+    /* 黑暗模式下的渐变背景 - 深紫到深蓝 */
+    background: linear-gradient(135deg,
+      rgba(88, 28, 135, 0.95) 0%,
+      rgba(67, 56, 202, 0.95) 50%,
+      rgba(37, 99, 235, 0.95) 100%) !important;
+    box-shadow:
+      0 4px 20px rgba(88, 28, 135, 0.4),
+      0 8px 40px rgba(67, 56, 202, 0.3),
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .title-row:hover {
+    box-shadow:
+      0 6px 25px rgba(88, 28, 135, 0.5),
+      0 10px 50px rgba(67, 56, 202, 0.4),
+      0 2px 5px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 移动端进一步字体优化 */
+@media (max-width: 720px) {
+:root {
+    font-size: 17px;
+  }
+
+  body {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  /* 任务标题 */
+  .todo-title {
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+  }
+
+  /* 任务内容 */
+  .todo-content {
+    font-size: 0.98rem !important;
+    line-height: 1.65 !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.01em;
+  }
+
+  /* 按钮文字 */
+  .item-actions button,
+  .todo-edit-buttons button {
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    font-family: "SourceHanSansCN", sans-serif !important;
+  }
+
+  /* 输入框 */
+  #todo-form input,
+  #todo-form textarea,
+  .todo-edit-input {
+    font-size: 1.05rem !important;
+    line-height: 1.6 !important;
+    font-weight: 500 !important;
+  }
+
+  /* 所有文字元素整体加粗 */
+  * {
+    font-weight: inherit;
+    -webkit-text-stroke: 0.3px;
+  }
+
+  /* 分享选择菜单 - 手机端优化 */
+  .share-choice-menu {
+    min-width: 160px; /* 增加最小宽度 */
+    max-width: 90vw; /* 不超过屏幕90% */
+    left: 50% !important; /* 水平居中 */
+    transform: translateX(-50%); /* 居中对齐 */
+    top: auto !important; /* 取消固定顶部位置 */
+    bottom: 80px; /* 距离底部80px，避免被手指遮挡 */
+  }
+
+  .share-choice-item {
+    font-size: 0.9rem; /* 稍微增大字体 */
+    padding: 1rem 1.2rem; /* 增加内边距，更容易点击 */
+    gap: 0.8rem;
+    display: flex !important; /* 强制flex布局 */
+    align-items: center !important; /* 确保垂直居中 */
+  }
+
+  /* 确保<a>标签继承flex布局 */
+  a.share-choice-item {
+    display: flex !important;
+    align-items: center !important;
+    text-decoration: none;
+  }
+
+  .share-choice-icon {
+    font-size: 1.5rem; /* 增大图标 */
+  }
+
+  .share-choice-text {
+    font-size: 0.9rem;
+  }
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    align-items: center;
+    padding-top: 2.2rem;
+  }
+
+  .search-container {
+    margin: 0.9rem 0 1rem;
+    gap: 0.5rem;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+
+  #todo-search {
+    padding: 0.65rem 0.8rem;
+    font-size: 0.9rem;
+    min-width: 0;
+  }
+
+  .admin-login-btn {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .todo-app {
+    width: 100%;
+    max-width: calc(100vw - 2rem);
+    margin: 0 auto;
+  }
+
+  .todo-panel {
+    padding: 1.2rem 1rem 1.2rem;
+    border-radius: 20px;
+  }
+
+  .panel-header {
+    align-items: center;
+  }
+
+  .title-row {
+    width: calc(100vw - 2rem) !important;
+    padding: 0.9rem 1.2rem !important;
+    border-radius: 20px !important;
+    top: 0.4rem !important;
+  }
+
+  .todo-panel {
+    margin-top: 1.4rem;
+  }
+
+  .header-text {
+    padding-top: 0;
+  }
+
+  /* 手机端：版本号、开发者、日期在一行显示 */
+  .meta-date-container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .app-meta {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+
+  .today-badge {
+    font-size: var(--badge-font-size);
+    padding: 0.35rem 0.65rem;
+  }
+
+  /* 手机端：编辑和刷新按钮在一行显示 */
+  .action-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 0.8rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    padding: 0 0.75rem;
+  }
+
+  .action-buttons .form-toggle,
+  .action-buttons .refresh-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    font-size: 0.88rem;
+    padding: 0.65rem 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .start-time-group {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .app-meta {
+    font-size: 0.92rem;
+  }
+
+  #todo-form {
+    padding: 1rem;
+  }
+
+  #todo-form button {
+    justify-self: stretch;
+    text-align: center;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* 手机端：原controls容器中的filters被移到backup-controls，隐藏空容器 */
+  .controls:has(.filters:only-child) {
+    display: none;
+  }
+
+  /* 手机端：筛选按钮变窄，与导出/导入同行 */
+  .filters {
+    justify-content: flex-start;
+    width: auto;
+    flex: 0 0 auto;
+    gap: 0.2rem;
+    padding: 0.25rem;
+  }
+
+  .filters button {
+    flex: 0 0 auto;
+    text-align: center;
+    padding: 0.35rem 0.45rem;
+    font-size: 0.75rem;
+  }
+
+  .stats {
+    justify-content: space-between;
+  }
+
+  /* 手机端：backup-controls 布局调整 */
+  /* 手机端：backup-controls 布局调整 */
+  #backup-controls {
+    display: grid !important;
+    grid-template-columns: auto auto;  /* 两列 */
+    justify-content: center;           /* 整体居中 */
+    align-items: center;
+    gap: 0.5rem 0.8rem;
+    margin: 0.8rem 0 !important;
+  }
+
+  /* 第一行：导出/导入在一起，居中 */
+  #backup-controls::before {
+    content: '';
+    display: none;
+  }
+
+  #export-btn {
+    grid-row: 1;
+    grid-column: 1;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    white-space: nowrap;
+  }
+
+  #import-btn {
+    grid-row: 1;
+    grid-column: 2;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    white-space: nowrap;
+  }
+
+  /* 第二行：切换用户和昵称在一起，居中 */
+  #switch-user-btn {
+    grid-row: 2;
+    grid-column: 1;
+    font-size: 0.75rem !important;
+    padding: 0.4rem 0.6rem;
+  }
+
+  #user-badge {
+    grid-row: 2;
+    grid-column: 2;
+    font-size: 0.85rem;
+  }
+
+  /* 第三行：筛选按钮居中 */
+  #backup-controls .filters {
+    grid-row: 3;
+    grid-column: 1 / -1;   /* 跨两列，居中 */
+    justify-self: center;
+    margin: 0;
+  }
+
+  .todo-item {
+    grid-template-columns: 24px 1fr;
+    padding: 0.95rem 1rem;
+  }
+
+  .item-actions {
+    flex-direction: row;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+.pin-switch {
+    width: 32px;
+    height: 18px;
+  }
+  
+  .pin-slider {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .pin-toggle input:checked + .pin-switch .pin-slider {
+    transform: translateX(14px);
+  }
+
+.pin-label {
+    font-size: 0.72rem !important;
+    padding: 0.15rem 0.42rem !important;
+    margin-left: 4px !important;
+  }
+
+/* 整体任务卡片布局紧凑化 */
+  .todo-item {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0.8rem 0.8rem 0.13rem 0.8rem !important;
+    gap: 0.13rem !important;
+  }
+
+  /* 任务详情区域的间距也缩小 */
+  .todo-details {
+    gap: 0.13rem !important;
+  }
+
+  /* 底部按钮区域包含复选框 */
+  .item-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.6rem !important;
+    margin-top: 0.05rem !important;
+    border-top: 1px solid rgba(81,70,255,0.08);
+    padding-top: 0.08rem !important;
+  }
+
+  /* 复选框放在按钮行最左侧 */
+  .item-actions .checkbox {
+    order: -1 !important;
+    margin-right: auto !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* 复选框视觉尺寸缩小 */
+  .item-actions .custom-checkbox {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 6px !important;
+  }
+
+  /* 扩大触控区域，提升易用性 */
+  .item-actions .checkbox input {
+    position: absolute !important;
+    inset: 0 !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+  }
+
+  /* 取消原顶部位置 */
+
+/* 调整任务整体布局为纵向堆叠 */
+  .todo-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 0.8rem 0.8rem 0.13rem !important;
+  }
+
+  /* 任务详情区域的间距也缩小 */
+  .todo-details {
+    gap: 0.13rem !important;
+  }
+
+  /* 底部操作区域统一一行显示 */
+  .item-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.6rem !important;
+    margin-top: 0.05rem !important;
+    border-top: 1px solid rgba(81, 70, 255, 0.08);
+    padding-top: 0.08rem !important;
+  }
+
+  /* 将复选框移到底部，与按钮同一行最左侧 */
+  .item-actions .checkbox {
+    order: -1 !important;
+    margin-right: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+  }
+
+  /* 缩小视觉尺寸 */
+  .item-actions .custom-checkbox {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 6px !important;
+  }
+
+  /* 调整底部按钮尺寸 */
+  .item-actions button {
+    font-size: 0.9rem !important;
+    padding: 0.4rem 0.9rem !important;
+  }
+
+.font-size-control {
+    margin-left: 0.3rem;
+    padding: 0.1rem;
+    order: 5 !important;
+  }
+
+  .font-size-btn {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.7rem;
+  }
+
+.line-order-control {
+    margin-left: 0.3rem;
+    padding: 0.1rem;
+    order: 6 !important;
+  }
+
+  .line-order-btn {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+.start-field input[type="date"],
+  .start-field input[type="time"] {
+    width: auto !important;
+    max-width: 100%;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  /* 开始日期占更多空间，开始时间占较少空间 */
+  .start-group {
+    display: flex;
+    gap: 0.7rem;
+  }
+
+  .start-field:has(input[type="date"]) {
+    flex: 2;
+    min-width: 0;
+  }
+
+  .start-field:has(input[type="time"]) {
+    flex: 1;
+    min-width: 0;
+  }
+
+.admin-user-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .admin-user-id {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .user-id-text {
+    font-size: 0.88rem;
+  }
+
+  .user-nickname-badge {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .user-nickname-empty {
+    font-size: 0.75rem;
+  }
+
+  .admin-user-stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+  }
+
+  .stat-separator {
+    display: none;
+  }
+
+  .admin-user-actions {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .admin-view-btn,
+  .admin-edit-btn,
+  .admin-delete-btn {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    text-align: center;
+  }
+
+  .admin-add-user-btn {
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+  }
+
+  /* 用户数据浏览对话框移动端适配 */
+  .user-data-view-dialog {
+    width: 95vw;
+    max-height: 85vh;
+  }
+
+  .user-data-view-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .user-data-view-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .user-data-view-body {
+    padding: 1.5rem;
+  }
+
+  .user-data-label {
+    min-width: 80px;
+    font-size: 0.9rem;
+  }
+
+  .user-data-value {
+    font-size: 0.95rem;
+  }
+
+  .view-task-list {
+    max-height: 300px;
+  }
+
+  .view-task-item {
+    padding: 0.8rem 1rem;
+  }
+
+  .view-task-title {
+    font-size: 0.95rem;
+  }
+
+  .task-content {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .task-content h1 { font-size: 1.2rem; }
+  .task-content h2 { font-size: 1.1rem; }
+  .task-content h3 { font-size: 1rem; }
+  .task-content h4,
+  .task-content h5,
+  .task-content h6 { font-size: 0.95rem; }
+
+  .task-content code {
+    font-size: 0.8em;
+  }
+
+  .task-content pre {
+    padding: 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .view-task-meta {
+    font-size: 0.8rem;
+  }
+
+/* 分享对话框 - 移动端优化 */
+  .share-overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .share-dialog {
+    width: calc(100vw - 1rem);
+    max-width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.2rem 1rem;
+    margin: 0.5rem auto;
+    box-sizing: border-box;
+    border-radius: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 确保分享对话框内所有元素不溢出 */
+  .share-dialog * {
+    box-sizing: border-box;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .share-dialog h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .share-tips {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  /* 输入框优化 */
+  .share-input-wrapper {
+    width: 100%;
+  }
+
+  #share-target-user {
+    width: 100%;
+    font-size: 16px;
+    padding: 0.8rem;
+    box-sizing: border-box;
+  }
+
+  /* 用户下拉列表 */
+  .user-dropdown {
+    max-width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 已选用户标签 */
+  .selected-users-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .selected-user-tag {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    max-width: 100%;
+  }
+
+  /* 署名选项 */
+  .share-signature-options {
+    margin: 1rem 0;
+  }
+
+  .signature-radios {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .signature-option {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* 附件信息 */
+  .share-attachment-info {
+    margin: 1rem 0;
+    padding: 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .attachment-info-details {
+    font-size: 0.8rem;
+    max-height: 150px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 分享历史 */
+  .share-history-hint {
+    font-size: 0.85rem;
+    padding: 0.8rem;
+    margin: 0.8rem 0;
+  }
+
+  .share-history-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .revoke-share-btn,
+  .refresh-history-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  /* 进度条 */
+  .share-progress-container {
+    margin: 1rem 0;
+    font-size: 0.85rem;
+  }
+
+  /* 操作按钮 */
+  .share-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .share-actions button {
+    flex: 1;
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  #share-target-user {
+    font-size: 0.95rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .share-signature-options {
+    margin: 1.2rem 0;
+    padding: 0.9rem;
+  }
+
+  .signature-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .signature-option {
+    padding: 0.7rem 0.6rem;
+  }
+
+  .signature-option > span:first-of-type {
+    font-size: 0.95rem;
+  }
+
+  .signature-hint {
+    font-size: 0.85rem;
+  }
+
+  .share-actions {
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .share-actions button {
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+    flex: 1;
+    min-width: 120px;
+  }
+
+  /* 进度条容器手机端优化 */
+  .share-progress-container {
+    padding: 1rem;
+  }
+
+  .progress-label,
+  .progress-count {
+    font-size: 0.9rem;
+  }
+
+  .progress-bar-bg {
+    height: 20px;
+  }
+
+  .progress-status {
+    font-size: 0.8rem;
+  }
+
+  /* 用户标签容器手机端优化 */
+  .selected-users-container {
+    gap: 0.4rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .user-tag {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.7rem;
+  }
+
+  /* 用户下拉列表手机端优化 */
+  .user-dropdown {
+    max-height: 200px;
+    font-size: 0.9rem;
+  }
+
+  .user-dropdown-item {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .dropdown-user-nickname {
+    font-size: 0.95rem;
+  }
+
+  .dropdown-user-id {
+    font-size: 0.8rem;
+  }
+
+.share-history-hint {
+    padding: 0.9rem;
+    gap: 0.7rem;
+  }
+
+  .history-info {
+    font-size: 0.9rem;
+  }
+
+  .history-icon {
+    font-size: 1.1rem;
+  }
+
+  .revoke-share-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .revoke-icon {
+    font-size: 1rem;
+  }
+
+  .revoke-text {
+    font-size: 0.9rem;
+  }
+
+.revoke-text::before {
+    content: "撤回";
+  }
+  
+  .revoke-text {
+    font-size: 0;
+  }
+  
+  .refresh-text::before {
+    content: "刷新";
+  }
+  
+  .refresh-text {
+    font-size: 0;
+  }
+  
+  /* 恢复伪元素的字体大小 */
+  .revoke-text::before,
+  .refresh-text::before {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  
+  /* 按钮宽度自适应 */
+  .revoke-share-btn,
+  .refresh-history-btn {
+    padding: 0.65rem 1rem;
+    min-width: auto;
+    width: auto;
+  }
+
+.share-history-actions {
+    justify-content: center;
+  }
+
+.fullscreen-toggle-btn {
+    margin-left: 0.3rem;
+    padding: 0.15rem 0.4rem;
+    font-size: 0.9rem;
+    order: 7 !important;
+  }
+
+.fullscreen-toggle-btn-bottom {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    border: 1px solid rgba(108, 114, 139, 0.2);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--muted);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .fullscreen-toggle-btn-bottom:hover {
+    background: rgba(81, 70, 255, 0.1);
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+.panel-header,
+  #collapsible-controls {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+  }
+
+.panel-header:has(.collapsible-content.collapsed) {
+    padding: 0.3rem 1rem;
+    margin-top: 0.3rem;
+  }
+
+.item-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    gap: 0.4rem !important;
+    margin-top: 0.4rem !important;
+  }
+
+  .item-actions button {
+    flex-shrink: 0;
+    padding: 0.35rem 0.6rem !important;
+  }
+
+  .item-actions .checkbox {
+    order: -1 !important;
+    margin-right: auto !important;
+    margin-left: 0.5rem !important;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 3px !important;
+    position: relative !important;
+  }
+
+  .item-actions .custom-checkbox {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 6px !important;
+  }
+
+  .item-actions .checkbox input {
+    position: absolute !important;
+    inset: 0 !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+  }
+
+  .item-actions .checkbox .checkbox-label {
+    display: none !important;
+  }
+
+/* 标题行使用flex布局，容纳checkbox */
+  .todo-header {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  /* checkbox在标题行的最左侧 */
+  .todo-header > .checkbox {
+    position: static !important;
+    order: -999 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .todo-header > .checkbox .custom-checkbox {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 6px !important;
+  }
+
+  /* 标题文字紧跟checkbox */
+  .todo-title {
+    flex: 0 1 auto !important;
+    order: -998 !important;
+  }
+
+  /* 其他元素保持默认order */
+  .todo-date {
+    order: 0;
+  }
+
+  .todo-repeat-badge {
+    order: 1;
+  }
+
+  .pin-toggle {
+    order: 2;
+  }
+
+  /* 移除底部按钮区域的checkbox（如果有的话） */
+  .item-actions .checkbox {
+    display: none !important;
+  }
+
+.share-attachment-info {
+    padding: 0.75rem;
+  }
+
+  .attachment-info-details {
+    max-height: 100px;
+  }
+
+  .attachment-item-preview {
+    font-size: 0.8rem;
+  }
+
+  .attachment-info-note {
+    font-size: 0.8rem;
+  }
+
+.app-footer {
+    width: calc(100vw - 2rem);
+    max-width: calc(100vw - 2rem);
+    margin: 1rem auto 0;
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+  }
+
+  .footer-developer {
+    text-align: center;
+    word-break: break-word;
+    margin: 0;
+    padding: 0 1rem;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+  background: radial-gradient(circle at 20% 20%, #ffffff 0%, var(--bg) 60%);
+  color: var(--text-main);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.45;
+  z-index: -2;
+}
+
+body::before {
+  background: rgba(112, 126, 255, 0.35);
+  top: -160px;
+  left: -120px;
+}
+
+body::after {
+  background: rgba(255, 145, 179, 0.28);
+  bottom: -180px;
+  right: -160px;
+}
+
+.todo-app {
+  width: min(960px, calc(100vw - 2.5rem));
+  padding: clamp(1.5rem, 4vw, 3.5rem) 0;
+}
+
+.todo-panel {
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.85));
+  border-radius: 28px;
+  padding: clamp(1.6rem, 4vw, 2.75rem);
+  box-shadow: 0 28px 80px var(--shadow);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(18px);
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  letter-spacing: -0.6px;
+  text-align: center;
+}
+
+/* 固定标题行（仅包含大标题和小三角） */
+.title-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.8rem !important;
+  position: fixed !important;
+  top: 0.1rem !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 100 !important;
+  width: min(960px, calc(100vw - 2.5rem)) !important;
+  margin: 0 auto !important;
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.7) 0%,
+    rgba(79, 70, 229, 0.7) 50%,
+    rgba(37, 99, 235, 0.7) 100%) !important;
+  padding: 1rem 1.5rem !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow:
+    0 4px 20px rgba(139, 92, 246, 0.3),
+    0 8px 40px rgba(79, 70, 229, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+  touch-action: manipulation !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  cursor: pointer !important;
+}
+
+/* 标题行悬浮效果 */
+.title-row:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 6px 25px rgba(139, 92, 246, 0.4),
+    0 10px 50px rgba(99, 102, 241, 0.3),
+    0 2px 5px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 标题文字样式美化 */
+.title-row h1 {
+  margin: 0 !important;
+  font-size: clamp(1.6rem, 4vw, 2.2rem) !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(255, 255, 255, 0.3) !important;
+  letter-spacing: 0.5px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f0f0ff 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  touch-action: manipulation !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease !important;
+}
+
+/* 标题文字悬停效果 */
+.title-row h1:hover {
+  transform: scale(1.02) !important;
+}
+
+/* 版本号小字体样式 */
+.version-small {
+  font-size: 0.5em !important;
+  font-weight: 400 !important;
+  opacity: 0.9 !important;
+  margin-left: 0.3em !important;
+  letter-spacing: 0 !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: initial !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 为固定标题留出空间 */
+.todo-panel {
+  margin-top: 0.5rem;
+}
+
+.header-text {
+  padding-top: 0;
+}
+
+/* 折叠/展开按钮 */
+.header-collapse-btn {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  cursor: pointer;
+  padding: 0.5rem !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border-radius: 10px !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.header-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.header-collapse-btn:active {
+  transform: scale(0.95) !important;
+}
+
+.collapse-icon {
+  font-size: 1.3rem !important;
+  color: #ffffff !important;
+  display: inline-block;
+  transition: transform 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5)) !important;
+}
+
+.header-collapse-btn.collapsed .collapse-icon {
+  transform: rotate(-90deg);
+}
+
+/* 可折叠内容区域 */
+.collapsible-content,
+.collapsible-controls {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease, margin 0.4s ease;
+  max-height: 5000px;
+  opacity: 1;
+}
+
+.collapsible-content.collapsed,
+.collapsible-controls.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+}
+
+.app-meta {
+  margin: 0.5rem 0 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.15px;
+}
+
+.meta-date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-version {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.app-developer {
+  font-weight: 500;
+}
+
+.platform-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.65rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.platform-link::after {
+  content: "↗";
+  font-size: 0.9em;
+}
+
+.platform-link:hover,
+.platform-link:focus-visible {
+  color: var(--primary-dark);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.today-badge {
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: var(--badge-font-size);
+}
+
+.form-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1.35rem;
+  border-radius: 18px;
+  border: none;
+  background: linear-gradient(135deg, #6b63ff, #7d77ff);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(81, 70, 255, 0.25);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.form-toggle:hover,
+.form-toggle:focus-visible {
+  background: linear-gradient(135deg, #5146ff, #6b63ff);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(81, 70, 255, 0.35);
+}
+
+.form-toggle {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(81,70,255,0.2); }
+  50% { box-shadow: 0 0 20px rgba(81,70,255,0.45); }
+}
+
+.form-toggle:focus-visible {
+  outline: none;
+}
+
+.form-toggle[aria-expanded="true"] {
+  background: #f2f2f2;
+  color: var(--primary);
+  border: 1px solid rgba(81,70,255,0.25);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg,#f8f8f8,#e6e6e6);
+}
+
+/* 循环筛选按钮 */
+.filter-cycle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.2rem;
+  border-radius: 18px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 60px;
+  writing-mode: horizontal-tb !important;
+  -webkit-writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  white-space: nowrap !important;
+}
+
+.filter-cycle-btn:hover,
+.filter-cycle-btn:focus-visible {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(81, 70, 255, 0.3);
+}
+
+.filter-cycle-btn:active {
+  transform: translateY(0);
+}
+
+/* 显示/隐藏已完成按钮 */
+.show-completed-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 0.6rem;
+  border-radius: 18px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 36px;
+  writing-mode: horizontal-tb !important;
+  -webkit-writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  white-space: nowrap !important;
+}
+
+.show-completed-btn:hover,
+.show-completed-btn:focus-visible {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(81, 70, 255, 0.3);
+}
+
+.show-completed-btn:active {
+  transform: translateY(0);
+}
+
+.start-time-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+}
+
+.start-time-field {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: var(--muted);
+  gap: 0.4rem;
+}
+
+.start-time-field input {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(81, 70, 255, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 1rem;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.start-time-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18);
+}
+
+.start-time-field span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+#todo-form {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 1.75rem;
+  padding: 1.15rem;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 225, 0.98),
+    rgba(255, 243, 205, 0.95)
+  );
+  border: 2px solid rgba(255, 193, 7, 0.4);
+  box-shadow: 0 8px 24px rgba(255, 193, 7, 0.15);
+}
+
+#todo-form[hidden] {
+  display: none;
+}
+
+#todo-form input,
+#todo-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.95rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+  color: inherit;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#todo-form input:focus,
+#todo-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18);
+}
+
+#todo-form textarea {
+  resize: vertical;
+  min-height: 5.5rem;
+  line-height: 1.58;
+}
+
+#todo-form 
+/* ==================== 新任务置顶选项样式（优化版）==================== */
+
+.pin-option-group {
+  margin: 1rem 0 0.8rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.pin-option-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%);
+  border: 1.5px solid #ffcc80;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.pin-option-label:hover {
+  background: linear-gradient(135deg, #fff5e6 0%, #ffecd2 100%);
+  border-color: #ffb74d;
+  box-shadow: 0 2px 8px rgba(255, 183, 77, 0.2);
+  transform: translateY(-1px);
+}
+
+/* 隐藏原生复选框 */
+.pin-option-label input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 自定义复选框 */
+.pin-option-label::before {
+  content: '';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff9800;
+  border-radius: 6px;
+  background: white;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+/* 选中状态 */
+.pin-option-label input[type="checkbox"]:checked + .pin-option-text::before {
+  content: '✓';
+  position: absolute;
+  left: 1.35rem;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.pin-option-label:has(input[type="checkbox"]:checked)::before {
+  background: linear-gradient(135deg, #ff9800 0%, #fb8c00 100%);
+  border-color: #f57c00;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15);
+}
+
+/* 聚焦状态（键盘导航） */
+.pin-option-label:has(input[type="checkbox"]:focus-visible)::before {
+  outline: 2px solid #ff9800;
+  outline-offset: 2px;
+}
+
+.pin-option-text {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+  position: relative;
+  padding-left: 0;
+  line-height: 1.3;
+}
+
+.pin-option-hint {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 400;
+  margin-left: 0.3rem;
+  opacity: 0.85;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .pin-option-group {
+    margin: 0.8rem 0 0.6rem;
+  }
+
+  .pin-option-label {
+    padding: 0.5rem 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .pin-option-label::before {
+    width: 18px;
+    height: 18px;
+  }
+
+  .pin-option-label input[type="checkbox"]:checked + .pin-option-text::before {
+    left: 1.2rem;
+    font-size: 12px;
+  }
+
+  .pin-option-text {
+    font-size: 0.85rem;
+  }
+
+  .pin-option-hint {
+    font-size: 0.7rem;
+    display: block;
+    margin-left: 0;
+    margin-top: 0.2rem;
+    padding-left: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+.pin-option-label {
+    padding: 0.45rem 0.7rem;
+  }
+
+  .pin-option-label::before {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pin-option-label input[type="checkbox"]:checked + .pin-option-text::before {
+    left: 1.1rem;
+    font-size: 11px;
+  }
+
+  .pin-option-text {
+    font-size: 0.8rem;
+  }
+
+  .pin-option-hint {
+    font-size: 0.68rem;
+    padding-left: 1.3rem;
+  }
+
+.share-dialog {
+    width: calc(100vw - 0.5rem);
+    padding: 1rem 0.8rem;
+    margin: 0.25rem auto;
+    border-radius: 12px;
+  }
+
+  .share-dialog h2 {
+    font-size: 1.2rem;
+  }
+
+  .share-tips {
+    font-size: 0.8rem;
+  }
+
+  #share-target-user {
+    font-size: 16px;
+    padding: 0.7rem;
+  }
+
+  .signature-option {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .share-attachment-info {
+    padding: 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .share-actions button {
+    font-size: 0.85rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .revoke-share-btn,
+  .refresh-history-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+.repeat-options {
+    gap: 0.3rem;
+  }
+
+  .repeat-option {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  .repeat-option span {
+    font-size: 0.8rem;
+  }
+
+  .repeat-option input[type="radio"] {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+.pin-option-label {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .pin-option-text {
+    font-size: 0.75rem;
+  }
+
+  .pin-option-hint {
+    font-size: 0.65rem;
+  }
+
+.share-dialog {
+    width: calc(100vw - 0.25rem);
+    padding: 0.8rem 0.6rem;
+  }
+
+  .share-dialog h2 {
+    font-size: 1.1rem;
+  }
+
+  .share-tips {
+    font-size: 0.75rem;
+  }
+
+  .share-actions button {
+    font-size: 0.8rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+.repeat-options {
+    gap: 0.2rem;
+  }
+
+  .repeat-option {
+    padding: 0.4rem 0.2rem;
+    font-size: 0.8rem;
+  }
+
+  .repeat-option span {
+    font-size: 0.75rem;
+  }
+
+  .repeat-option input[type="radio"] {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.form-actions {
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.form-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+#todo-form .form-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+#todo-form .repeat-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  user-select: none;
+  cursor: pointer;
+}
+
+#todo-form .repeat-field input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--primary);
+}
+
+#todo-form .repeat-field span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+#todo-form button {
+  padding: 0.8rem 1.65rem;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* 确认按钮样式 - 与编辑模式统一 */
+.form-confirm,
+.form-cancel {
+  padding: 0.8rem 1.65rem;
+  border-radius: 14px;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-confirm {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(81, 70, 255, 0.25);
+}
+.form-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(81, 70, 255, 0.35);
+}
+.form-confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(81, 70, 255, 0.2);
+}
+/* 取消按钮样式 - 与编辑模式统一 */
+.form-cancel {
+  background: transparent;
+  color: var(--muted);
+  border: 2px solid var(--panel-border);
+}
+.form-cancel:hover {
+  background: var(--bg-accent);
+  color: var(--text-main);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+.form-cancel:active {
+  background: var(--panel-border);
+  transform: translateY(0);
+}
+#todo-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(81, 70, 255, 0.25);
+}
+
+#todo-form button:active {
+  transform: translateY(0);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.75rem;
+}
+
+.search-container {
+  width: 100%;
+  margin: 0 0 1.2rem;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+#todo-search {
+  flex: 1 1 auto;
+  padding: 0.85rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 1rem;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-login-btn {
+  flex: 0 0 auto;
+  padding: 0.85rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.3);
+  background: rgba(81, 70, 255, 0.08);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-login-btn:hover,
+.admin-login-btn:focus-visible {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+  outline: none;
+}
+
+#todo-search::placeholder {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+#todo-search:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18);
+}
+
+.filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem;
+  border-radius: 999px;
+  background: rgba(81, 70, 255, 0.08);
+}
+
+.filters button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0.55rem 1.05rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.filters button.active {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 10px 24px rgba(81, 70, 255, 0.18);
+}
+
+.filters button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.stats button {
+  border: none;
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.stats button:hover {
+  background: rgba(81, 70, 255, 0.2);
+}
+
+.stats button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+#switch-user-btn {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 1.15rem; 
+  border: 1px solid rgba(81, 70, 255, 0.3);
+  background: rgba(81, 70, 255, 0.08);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+#switch-user-btn:hover,
+#switch-user-btn:focus-visible {
+  color: #fff;
+  background: var(--primary);
+  border-color: transparent;
+  outline: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.34rem;
+}
+
+.todo-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 0.95rem;
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), var(--bg-accent));
+  border: 1px solid rgba(96, 107, 255, 0.15);
+  box-shadow: 0 18px 40px rgba(56, 66, 150, 0.12);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.todo-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--primary), rgba(81, 70, 255, 0.3));
+  border-radius: 18px 0 0 18px;
+  opacity: 0.85;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+
+/* 编辑状态下的任务项背景 */
+.todo-item.editing {
+  background: linear-gradient(120deg, rgba(255, 235, 180, 0.98), rgba(255, 220, 150, 0.95));
+  border: 2px solid rgba(255, 165, 0, 0.7);
+  box-shadow: 0 8px 32px rgba(255, 165, 0, 0.4), 0 0 0 4px rgba(255, 193, 7, 0.15);
+}
+
+.todo-item.editing::before {
+  width: 6px;
+  background: linear-gradient(180deg, #ff9800, rgba(255, 152, 0, 0.6));
+}
+
+/* 编辑状态下隐藏底部操作按钮 */
+.todo-item.editing .attachment-btn,
+.todo-item.editing .share-btn,
+.todo-item.editing .edit-btn,
+.todo-item.editing .delete-btn,
+.todo-item.editing .fullscreen-toggle-btn {
+  display: none;
+}
+
+/* 编辑状态下的输入框背景色 */
+.todo-item.editing .todo-edit-input {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 165, 0, 0.4);
+}
+
+.todo-item.editing .todo-edit-input:focus {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 165, 0, 0.7);
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.2);
+}
+
+/* 编辑状态下的日期时间输入框 */
+.todo-item.editing .start-field input {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 165, 0, 0.4);
+}
+
+.todo-item.editing .start-field input:focus {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 165, 0, 0.7);
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.2);
+}
+
+/* 编辑状态下的重复选项按钮 */
+.todo-item.editing .repeat-option {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 165, 0, 0.4);
+}
+
+.todo-item.editing .repeat-option:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 165, 0, 0.7);
+}
+
+/* 编辑状态下的自定义重复面板 */
+.todo-item.editing .custom-repeat-panel {
+  background: rgba(255, 245, 220, 0.5);
+  border-color: rgba(255, 165, 0, 0.3);
+}
+
+.todo-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 60px rgba(56, 66, 150, 0.16);
+}
+
+.todo-item.completed {
+  background: linear-gradient(
+    120deg,
+    rgba(241, 243, 255, 0.9),
+    rgba(236, 255, 252, 0.95)
+  );
+  border-color: rgba(90, 200, 150, 0.3);
+}
+
+.todo-item.completed::before {
+  background: linear-gradient(180deg, var(--success), rgba(56, 225, 166, 0.4));
+}
+
+.checkbox {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  margin-top: 0.15rem;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.checkbox input {
+  opacity: 0;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.custom-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  border: 2px solid rgba(81, 70, 255, 0.35);
+  background: #fff;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checkbox input:checked + .custom-checkbox {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-color: transparent;
+  box-shadow: 0 8px 16px rgba(81, 70, 255, 0.25);
+}
+
+.todo-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.13rem;
+  z-index: 1;
+}
+
+.todo-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.todo-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  word-break: break-word;
+  font-family: "SourceHanSansCN", sans-serif;
+}
+
+.todo-item.future .todo-title {
+  color: var(--primary);
+  text-shadow: 0 0 8px rgba(81, 70, 255, 0.35);
+}
+
+.todo-item.past .todo-title {
+  color: #1E90FF;
+}
+
+.todo-repeat-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(56, 225, 166, 0.18);
+  color: var(--success);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.todo-repeat-badge[hidden] {
+  display: none !important;
+}
+
+.todo-date {
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: rgba(81, 70, 255, 0.12);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.todo-content {
+  margin: 0;
+  margin-bottom: 0 !important;
+  font-size: 0.96rem;
+  color: var(--muted);
+  line-height: 1.6;
+  word-break: break-word;
+  max-height: 233px;
+  overflow-y: auto;
+  font-family: "LXGW WenKai", "SourceHanSansCN", "Songti SC", "SimSun", serif;
+  background: #fdf6e8;
+  padding: 0.5rem 0.8rem 0.13rem 0.8rem;
+  border-radius: 8px;
+}
+
+.todo-content:empty {
+  display: none;
+}
+
+/* Markdown样式支持 */
+.todo-content h1,
+.todo-content h2,
+.todo-content h3,
+.todo-content h4,
+.todo-content h5,
+.todo-content h6 {
+  margin: 0.5em 0 0.3em 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.todo-content h1 { font-size: 1.4em; }
+.todo-content h2 { font-size: 1.25em; }
+.todo-content h3 { font-size: 1.1em; }
+.todo-content h4,
+.todo-content h5,
+.todo-content h6 { font-size: 1em; }
+
+.todo-content p {
+  margin: 0.3em 0;
+}
+
+.todo-content > *:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.todo-content ul,
+.todo-content ol {
+  margin: 0.3em 0;
+  padding-left: 1.5em;
+}
+
+.todo-content li {
+  margin: 0.15em 0;
+}
+
+.todo-content code {
+  background: rgba(81, 70, 255, 0.08);
+  padding: 0.15em 0.3em;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.todo-content pre {
+  background: rgba(81, 70, 255, 0.05);
+  padding: 0.5em;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+
+.todo-content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.todo-content blockquote {
+  border-left: 3px solid rgba(81, 70, 255, 0.3);
+  padding-left: 0.8em;
+  margin: 0.5em 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.todo-content strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.todo-content em {
+  font-style: italic;
+}
+
+.todo-content a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.todo-content a:hover {
+  text-decoration: underline;
+}
+
+.todo-content hr {
+  border: none;
+  border-top: 1px solid rgba(81, 70, 255, 0.15);
+  margin: 0.8em 0;
+}
+
+.todo-item.completed .todo-title {
+  text-decoration: line-through;
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.todo-item.completed .todo-date {
+  background: rgba(56, 225, 166, 0.18);
+  color: var(--success);
+}
+
+.todo-item.completed .todo-content {
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-self: center;
+  z-index: 1;
+}
+
+.item-actions button {
+  padding: 0.45rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid rgba(81, 70, 255, 0.16);
+  cursor: pointer;
+  background: #fff;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.item-actions button:hover {
+  background: rgba(81, 70, 255, 0.12);
+  border-color: rgba(81, 70, 255, 0.45);
+  box-shadow: 0 10px 20px rgba(81, 70, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.share-btn {
+  border-color: rgba(56, 225, 166, 0.3);
+  color: var(--success);
+}
+
+.share-btn:hover {
+  background: rgba(56, 225, 166, 0.15);
+  border-color: rgba(56, 225, 166, 0.6);
+  color: var(--success);
+}
+
+/* 分享对话框样式 */
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 26, 0.6);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 1350;
+}
+
+.share-overlay[hidden] {
+  display: none;
+}
+
+.share-dialog {
+  width: min(90vw, 420px);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.92));
+  border-radius: 24px;
+  padding: 1.9rem 1.6rem;
+  box-shadow: 0 30px 80px rgba(32, 35, 58, 0.28);
+  border: 1px solid rgba(81, 70, 255, 0.25);
+}
+
+.share-dialog h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.65rem;
+  letter-spacing: -0.4px;
+}
+
+.share-hint {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.96rem;
+}
+
+/* 已选择的用户标签容器 */
+.selected-users-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  min-height: 32px;
+}
+
+.selected-user-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: linear-gradient(135deg, var(--primary), rgba(81, 70, 255, 0.85));
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(81, 70, 255, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selected-user-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(81, 70, 255, 0.35);
+}
+
+.selected-user-tag .tag-nickname {
+  font-weight: 600;
+}
+
+.selected-user-tag .tag-id {
+  opacity: 0.8;
+  font-size: 0.85rem;
+}
+
+.selected-user-tag .tag-remove {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 0.25rem;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.selected-user-tag .tag-remove:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* 输入框包装器 */
+.share-input-wrapper {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+#share-target-user {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+#share-target-user:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.2);
+}
+
+/* 下拉用户列表 */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  background: #fff;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.user-dropdown[hidden] {
+  display: none;
+}
+
+.user-dropdown-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.user-dropdown-item:hover {
+  background: rgba(81, 70, 255, 0.08);
+}
+
+.user-dropdown-item.selected {
+  background: rgba(81, 70, 255, 0.15);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.user-dropdown-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.user-dropdown-item.disabled:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dropdown-user-nickname {
+  font-weight: 600;
+  color: var(--primary);
+  margin-right: 0.5rem;
+}
+
+.dropdown-user-id {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.user-dropdown-empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.share-error {
+  margin: 0.5rem 0 0;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.share-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.share-actions button {
+  flex: 0 0 auto;
+  min-width: fit-content;
+  white-space: nowrap;
+  padding: 0.65rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.share-actions button[type="submit"] {
+  background: linear-gradient(135deg, var(--success), #2db872);
+  color: #fff;
+  box-shadow: 0 15px 28px rgba(56, 225, 166, 0.25);
+}
+
+.share-actions button[type="submit"]:hover {
+  transform: translateY(-1px);
+}
+
+.share-actions button[type="button"] {
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+}
+
+.share-actions button[type="button"]:hover {
+  background: rgba(81, 70, 255, 0.2);
+}
+
+/* 署名/匿名选项样式 */
+.share-signature-options {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(81, 70, 255, 0.03), rgba(56, 201, 133, 0.03));
+  border: 1px solid rgba(81, 70, 255, 0.1);
+  border-radius: 8px;
+}
+
+.signature-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.signature-radios {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.signature-option {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex: 0 0 auto;
+  min-width: fit-content;
+}
+
+.signature-option:hover {
+  background: rgba(81, 70, 255, 0.05);
+}
+
+.signature-option input[type="radio"] {
+  margin-right: 0.75rem;
+  margin-top: 0;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.signature-option > span:first-of-type {
+  font-weight: 500;
+  color: var(--text);
+  margin-right: 0.5rem;
+}
+
+.signature-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* 选中状态样式 */
+.signature-option:has(input[type="radio"]:checked) {
+  background: rgba(81, 70, 255, 0.08);
+  border: 1px solid rgba(81, 70, 255, 0.2);
+}
+
+.signature-option:has(input[type="radio"]:checked) > span:first-of-type {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* 广播分享进度条样式 */
+.share-progress-container {
+  margin: 1.5rem 0;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, rgba(81, 70, 255, 0.05), rgba(56, 201, 133, 0.05));
+  border: 1px solid rgba(81, 70, 255, 0.15);
+  border-radius: 12px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.progress-label {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+.progress-count {
+  font-weight: 600;
+  color: var(--success);
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--success));
+  border-radius: 12px;
+  width: 0%;
+  transition: width 0.3s ease;
+  box-shadow: 0 2px 8px rgba(81, 70, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 进度条动画效果 */
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-status {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* 进度条完成状态 */
+.progress-bar-fill.complete {
+  background: linear-gradient(90deg, var(--success), #2db872);
+}
+
+.progress-status.complete {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.progress-status.error {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.todo-edit-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  color: inherit;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.55;
+  resize: vertical;
+  min-height: 2.8rem;
+}
+
+.todo-edit-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18);
+}
+
+.todo-edit-title {
+  margin-bottom: 0.6rem;
+  resize: none;
+  min-height: unset;
+}
+
+.todo-edit-content {
+  min-height: 8rem;
+}
+
+.todo-edit-start-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.todo-edit-start-field {
+  flex: 1 1 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.todo-edit-start-field span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.todo-edit-start-field input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.todo-edit-start-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18);
+}
+
+.todo-edit-repeat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.todo-edit-repeat input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--primary);
+}
+
+.todo-edit-repeat span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.todo-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 3rem 1.5rem;
+  border: 1px dashed rgba(81, 70, 255, 0.28);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 420px) {
+body {
+    padding-top: 1.8rem;
+  }
+
+  .search-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    overflow: hidden !important;
+  }
+
+  #todo-search {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .filter-cycle-btn {
+    font-size: 0.7rem !important;
+    padding: 0.45rem 0.5rem !important;
+    min-width: 36px !important;
+    writing-mode: horizontal-tb !important;
+    -webkit-writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+
+  .show-completed-btn {
+    font-size: 0.7rem !important;
+    padding: 0.45rem 0.4rem !important;
+    min-width: 28px !important;
+    writing-mode: horizontal-tb !important;
+    -webkit-writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+
+  .form-toggle {
+    font-size: 0.7rem !important;
+    padding: 0.45rem 0.5rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+
+  .todo-panel {
+    padding: 1rem 0.8rem 1rem;
+  }
+
+  .todo-app {
+    width: 100%;
+    max-width: calc(100vw - 1.5rem);
+    margin: 0 auto;
+  }
+
+  .title-row {
+    width: calc(100vw - 1.5rem) !important;
+    padding: 0.8rem 1rem !important;
+    border-radius: 18px !important;
+    top: 0.3rem !important;
+  }
+
+  .todo-panel {
+    margin-top: 1.3rem;
+  }
+
+  .header-text {
+    padding-top: 0;
+  }
+
+  .filters {
+    gap: 0.35rem;
+  }
+
+  .filters button {
+    font-size: 0.82rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  #todo-search::placeholder {
+    font-size: 0.65rem;
+  }
+
+  .admin-login-btn {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  #export-btn,
+  #import-btn {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  #switch-user-btn {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.6rem;
+  }
+
+  #user-badge {
+    font-size: 0.8rem;
+  }
+
+  .start-time-group {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .todo-header {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+  }
+
+  .todo-title {
+    flex: 1 1 50% !important;
+    min-width: 50% !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    order: 1 !important;
+  }
+
+  .todo-date {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    font-size: 0.7rem !important;
+    padding: 0.15rem 0.4rem !important;
+    order: 2 !important;
+  }
+
+  .todo-repeat-badge {
+    flex: 0 0 auto !important;
+    font-size: 0.65rem !important;
+    padding: 0.15rem 0.4rem !important;
+    order: 3 !important;
+  }
+
+  .pin-toggle {
+    flex: 0 0 auto !important;
+    order: 4 !important;
+    transform: scale(0.85) !important;
+  }
+
+  .pin-label {
+    font-size: 0.65rem !important;
+    padding: 0.12rem 0.35rem !important;
+    margin-left: 3px !important;
+  }
+
+  .item-actions button {
+    font-size: 0.88rem;
+  }
+
+.user-id-dialog {
+    padding: 1.6rem 1.2rem;
+  }
+
+  .user-id-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .user-id-actions button {
+    width: 100%;
+  }
+
+.panel-header:has(.collapsible-content.collapsed) {
+    padding: 0.2rem 1rem;
+    margin-top: 0.2rem;
+  }
+
+.item-actions {
+    gap: 0.3rem !important;
+  }
+
+  .item-actions button {
+    font-size: 0.85rem !important;
+    padding: 0.3rem 0.5rem !important;
+  }
+
+/* 保持flexbox布局，只调整checkbox尺寸 */
+  .todo-header > .checkbox .custom-checkbox {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* 进一步减小按钮尺寸以容纳更多按钮 */
+  .item-actions button {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.4rem !important;
+  }
+
+  .item-actions {
+    gap: 0.25rem !important;
+  }
+}
+
+.user-id-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 26, 0.55);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 10000;
+}
+
+/* 确保 hidden 属性生效 */
+.user-id-overlay[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.user-id-dialog {
+  width: min(90vw, 420px);
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.92));
+  border-radius: 24px;
+  padding: 1.9rem 1.6rem;
+  box-shadow: 0 30px 80px rgba(32, 35, 58, 0.28);
+  border: 1px solid rgba(81, 70, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-id-dialog h2 {
+  margin: 0;
+  font-size: 1.65rem;
+  letter-spacing: -0.4px;
+}
+
+.user-id-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+#user-id-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#user-id-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.2);
+}
+
+.user-id-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.user-id-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.user-id-actions button {
+  padding: 0.65rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.user-id-actions button[type="submit"] {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  box-shadow: 0 15px 28px rgba(81, 70, 255, 0.25);
+}
+
+.user-id-actions button[type="submit"]:hover {
+  transform: translateY(-1px);
+}
+
+#user-id-cancel {
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+}
+
+#user-id-cancel:hover {
+  background: rgba(81, 70, 255, 0.2);
+}
+
+.user-badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+/* 退出按钮样式 */
+.logout-btn {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(239, 95, 122, 0.12);
+  color: var(--danger);
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 95, 122, 0.25);
+}
+
+/* ==================== 删除确认对话框样式 ==================== */
+.delete-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.delete-confirm-overlay[hidden] {
+  display: none;
+}
+
+.delete-confirm-dialog {
+  background: var(--panel-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.delete-confirm-dialog h3 {
+  margin: 0 0 1rem;
+  font-size: 1.3rem;
+  color: var(--danger);
+}
+
+.delete-confirm-dialog > p {
+  margin: 0 0 1rem;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.delete-attachment-info {
+  background: rgba(239, 95, 122, 0.08);
+  border: 1px solid rgba(239, 95, 122, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+}
+
+.delete-attachment-info p {
+  margin: 0 0 0.8rem;
+  color: var(--text-main);
+}
+
+.delete-files-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.delete-files-option:hover {
+  background: rgba(239, 95, 122, 0.1);
+}
+
+.delete-files-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--danger);
+  cursor: pointer;
+}
+
+.delete-files-option span {
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.delete-files-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0 !important;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
+.delete-confirm-actions .danger-btn {
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, var(--danger), #d32f2f);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-confirm-actions .danger-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 95, 122, 0.4);
+}
+
+.delete-confirm-actions .cancel-btn {
+  padding: 0.6rem 1.5rem;
+  background: var(--bg-accent);
+  color: var(--text-main);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-confirm-actions .cancel-btn:hover {
+  background: var(--panel-border);
+}
+
+/* ==================== 用户信息徽章样式 ==================== */
+.user-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, rgba(81, 70, 255, 0.1), rgba(56, 201, 133, 0.1));
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.user-nickname {
+  color: var(--primary);
+}
+
+.edit-nickname-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.2rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.edit-nickname-btn:hover {
+  opacity: 1;
+}
+
+/* ==================== 当前用户信息显示（切换用户对话框内）==================== */
+.current-user-info {
+  padding: 1rem;
+  background: rgba(81, 70, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(81, 70, 255, 0.15);
+}
+
+.current-user-info p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.current-user-info strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.current-user-info span {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.copy-id-btn {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.copy-id-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ==================== 昵称编辑对话框 ==================== */
+.nickname-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 26, 0.55);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 10100;
+}
+
+.nickname-dialog {
+  width: min(90vw, 420px);
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.92));
+  border-radius: 24px;
+  padding: 1.9rem 1.6rem;
+  box-shadow: 0 30px 80px rgba(32, 35, 58, 0.28);
+  border: 1px solid rgba(81, 70, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nickname-dialog h2 {
+  margin: 0;
+  font-size: 1.65rem;
+  letter-spacing: -0.4px;
+}
+
+.nickname-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+#nickname-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#nickname-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.2);
+}
+
+.nickname-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.nickname-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.nickname-actions button {
+  padding: 0.65rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.nickname-actions button[type="submit"] {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  box-shadow: 0 15px 28px rgba(81, 70, 255, 0.25);
+}
+
+.nickname-actions button[type="submit"]:hover {
+  transform: translateY(-1px);
+}
+
+#nickname-cancel {
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+}
+
+#nickname-cancel:hover {
+  background: rgba(81, 70, 255, 0.2);
+}
+
+/* ==================== 分享对话框提示样式 ==================== */
+.share-tips {
+  padding: 1rem;
+  background: rgba(56, 201, 133, 0.08);
+  border-radius: 12px;
+  border-left: 3px solid var(--success);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-main);
+}
+
+.share-tips strong {
+  color: var(--success);
+}
+
+.share-tips .my-nickname {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.share-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* 新增：添加任务界面的开始日期与时间样式 */
+.start-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.start-field {
+  flex: 1 1 120px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.start-field span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.start-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.start-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18);
+}
+
+/* ========= 管理员相关样式 ========= */
+
+.admin-overlay,
+.admin-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 26, 0.65);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 1300;
+}
+
+.admin-overlay[hidden],
+.admin-panel-overlay[hidden] {
+  display: none;
+}
+
+.admin-dialog {
+  width: min(90vw, 380px);
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.92));
+  border-radius: 24px;
+  padding: 1.9rem 1.6rem;
+  box-shadow: 0 30px 80px rgba(32, 35, 58, 0.28);
+  border: 1px solid rgba(81, 70, 255, 0.25);
+}
+
+.admin-dialog h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.65rem;
+  letter-spacing: -0.4px;
+}
+
+.admin-hint {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.96rem;
+}
+
+#admin-password-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(81, 70, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#admin-password-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.2);
+}
+
+.admin-error {
+  margin: 0.5rem 0 0;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.admin-actions button {
+  padding: 0.65rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.admin-actions button[type="submit"] {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  box-shadow: 0 15px 28px rgba(81, 70, 255, 0.25);
+}
+
+.admin-actions button[type="submit"]:hover {
+  transform: translateY(-1px);
+}
+
+.admin-actions button[type="button"] {
+  background: rgba(81, 70, 255, 0.12);
+  color: var(--primary);
+}
+
+.admin-actions button[type="button"]:hover {
+  background: rgba(81, 70, 255, 0.2);
+}
+
+/* 管理员面板 */
+.admin-panel {
+  width: min(95vw, 900px);
+  max-height: 85vh;
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.95));
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(32, 35, 58, 0.28);
+  border: 1px solid rgba(81, 70, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-panel-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(81, 70, 255, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-panel-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: -0.5px;
+}
+
+.admin-close-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+  font-size: 1.8rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.admin-close-btn:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.admin-panel-body {
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.admin-stats {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(81, 70, 255, 0.08);
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.admin-user-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-user-item {
+  padding: 1.2rem 1.5rem;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), var(--bg-accent));
+  border: 1px solid rgba(96, 107, 255, 0.15);
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(56, 66, 150, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-user-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(56, 66, 150, 0.15);
+}
+
+.admin-user-info {
+  flex: 1;
+}
+
+.admin-user-id {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.user-id-text {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: var(--primary);
+  background: rgba(81, 70, 255, 0.08);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.user-nickname-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  background: linear-gradient(135deg, rgba(56, 201, 133, 0.12), rgba(56, 201, 133, 0.08));
+  color: var(--success);
+  border: 1px solid rgba(56, 201, 133, 0.3);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-user-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.stat-separator {
+  color: rgba(108, 114, 139, 0.4);
+  font-weight: 300;
+}
+
+.user-nickname-empty {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.admin-user-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.admin-edit-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(81, 70, 255, 0.3);
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.admin-edit-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.admin-delete-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 95, 122, 0.3);
+  background: rgba(239, 95, 122, 0.1);
+  color: var(--danger);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.admin-delete-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: transparent;
+}
+
+.admin-view-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(56, 201, 133, 0.3);
+  background: rgba(56, 201, 133, 0.1);
+  color: var(--success);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.admin-view-btn:hover {
+  background: var(--success);
+  color: #fff;
+  border-color: transparent;
+}
+
+.admin-add-user-container {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.admin-add-user-btn {
+  padding: 0.8rem 1.8rem;
+  border-radius: 14px;
+  border: 2px solid var(--success);
+  background: linear-gradient(135deg, rgba(56, 201, 133, 0.15), rgba(56, 201, 133, 0.08));
+  color: var(--success);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(56, 201, 133, 0.15);
+}
+
+.admin-add-user-btn:hover {
+  background: var(--success);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(56, 201, 133, 0.3);
+}
+
+/* ==================== 用户数据浏览对话框 ==================== */
+.user-data-view-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 26, 0.65);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  z-index: 1400;
+}
+
+.user-data-view-overlay[hidden] {
+  display: none;
+}
+
+.user-data-view-dialog {
+  width: min(95vw, 800px);
+  max-height: 90vh;
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.92));
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(32, 35, 58, 0.28);
+  border: 1px solid rgba(81, 70, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-data-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(81, 70, 255, 0.15);
+  background: rgba(81, 70, 255, 0.05);
+}
+
+.user-data-view-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.user-data-view-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.user-data-info {
+  background: rgba(81, 70, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(81, 70, 255, 0.15);
+}
+
+.user-data-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.user-data-row:last-child {
+  margin-bottom: 0;
+}
+
+.user-data-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.user-data-value {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.user-data-tasks h3 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.view-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.view-task-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(81, 70, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.view-task-item:hover {
+  box-shadow: 0 4px 12px rgba(81, 70, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.view-task-item.completed {
+  opacity: 0.6;
+  background: rgba(240, 240, 245, 0.5);
+}
+
+.view-task-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.view-task-status {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.view-task-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+  flex: 1;
+}
+
+.view-task-item.completed .view-task-title {
+  text-decoration: line-through;
+}
+
+.task-content {
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+  background: rgba(81, 70, 255, 0.05);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Markdown内容样式 */
+.task-content p {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.task-content p:first-child {
+  margin-top: 0;
+}
+
+.task-content p:last-child {
+  margin-bottom: 0;
+}
+
+.task-content ul,
+.task-content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.task-content li {
+  margin: 0.3rem 0;
+}
+
+.task-content code {
+  background: rgba(81, 70, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+}
+
+.task-content pre {
+  background: rgba(81, 70, 255, 0.1);
+  padding: 0.8rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.task-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.task-content blockquote {
+  border-left: 3px solid var(--primary);
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+.task-content strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.task-content em {
+  font-style: italic;
+}
+
+.task-content a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.task-content a:hover {
+  text-decoration: underline;
+}
+
+.task-content h1,
+.task-content h2,
+.task-content h3,
+.task-content h4,
+.task-content h5,
+.task-content h6 {
+  margin: 0.8rem 0 0.5rem 0;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.task-content h1 { font-size: 1.4rem; }
+.task-content h2 { font-size: 1.2rem; }
+.task-content h3 { font-size: 1.1rem; }
+.task-content h4,
+.task-content h5,
+.task-content h6 { font-size: 1rem; }
+
+.view-task-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ==================== 刷新按钮样式 ==================== */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  margin-bottom: 1.25rem;
+  padding: 0 0.5rem;
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 18px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.refresh-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(81, 70, 255, 0.25);
+}
+
+.refresh-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(81, 70, 255, 0.2);
+}
+
+.refresh-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.refresh-btn.refreshing {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.refresh-btn.refreshing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 1s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+  .refresh-btn,
+  .form-toggle {
+    font-size: 0.85rem;
+    padding: 0.65rem 0.9rem;
+  }
+}
+
+/* ==================== 自定义重复选项样式 ==================== */
+.repeat-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.repeat-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 12px;
+  background: var(--bg-accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.repeat-option:hover {
+  border-color: var(--primary);
+  background: var(--panel-bg);
+  transform: translateY(-1px);
+}
+
+.repeat-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.repeat-option input[type="radio"]:checked + span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.repeat-option input[type="radio"]:checked {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.repeat-option span {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  transition: color 0.2s ease;
+}
+
+/* 自定义重复面板 */
+.custom-repeat-panel {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--bg-accent);
+  border: 2px solid var(--panel-border);
+  border-radius: 12px;
+}
+
+.custom-repeat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.custom-repeat-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.custom-repeat-field span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.custom-repeat-field select {
+  padding: 0.75rem 2.4rem 0.75rem 1rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--panel-bg), rgba(255, 255, 255, 0.95));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235146ff' d='M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 12px;
+  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0 2px 8px rgba(81, 70, 255, 0.08);
+}
+
+.custom-repeat-field select:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), var(--bg-accent));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(81, 70, 255, 0.15);
+}
+
+.custom-repeat-field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.18), 0 4px 12px rgba(81, 70, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.custom-repeat-field input[type="number"] {
+  padding: 0.6rem 0.8rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  color: var(--text-main);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.custom-repeat-field input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.1);
+}
+
+/* 提示信息 */
+.repeat-hints {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.6rem;
+  background: rgba(81, 70, 255, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid var(--primary);
+}
+
+.hint-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.hint-value {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  padding: 0.2rem 0.5rem;
+  background: var(--panel-bg);
+  border-radius: 6px;
+  border: 1px solid var(--panel-border);
+}
+
+.hint-separator {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+  .repeat-options {
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .repeat-option {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.7rem 0.5rem;
+    gap: 0.3rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(81, 70, 255, 0.2);
+    position: relative;
+    cursor: pointer;
+    /* 移动端触控优化 */
+    -webkit-tap-highlight-color: rgba(81, 70, 255, 0.1);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .repeat-option span {
+    white-space: nowrap;
+    text-align: center;
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .repeat-option input[type="radio"] {
+    /* 隐藏radio button，但保留完整触控区域 */
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    z-index: 5;
+    /* 确保可点击 */
+    pointer-events: auto;
+  }
+
+  /* 选中状态：明显的背景色和边框 */
+  .repeat-option:has(input[type="radio"]:checked) {
+    background: linear-gradient(135deg, rgba(81, 70, 255, 0.15), rgba(99, 102, 241, 0.1));
+    border-color: var(--primary);
+    border-width: 2px;
+    box-shadow: 0 2px 8px rgba(81, 70, 255, 0.2);
+  }
+
+  .repeat-option input[type="radio"]:checked ~ span {
+    font-weight: 700;
+    color: var(--primary);
+  }
+  /* 触控按下反馈 */
+  .repeat-option:active {
+    transform: scale(0.98);
+    background: rgba(81, 70, 255, 0.15);
+    transition: transform 0.1s ease, background 0.1s ease;
+  }
+
+  .custom-repeat-field input[type="number"] {
+    max-width: 100%;
+  }
+  
+  .repeat-hints {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}
+
+/* ==================== 任务编辑界面的重复选项样式 ==================== */
+.todo-edit-repeat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.todo-edit-repeat-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1.5px solid var(--panel-border);
+  border-radius: 10px;
+  background: var(--bg-accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  width: fit-content;
+}
+
+.todo-edit-repeat-option:hover {
+  border-color: var(--primary);
+  background: var(--panel-bg);
+}
+
+.todo-edit-repeat-option input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.todo-edit-repeat-option input[type="radio"]:checked + span {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.todo-edit-repeat-option span {
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.todo-edit-custom-repeat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  background: rgba(81, 70, 255, 0.05);
+  border-radius: 10px;
+  border-left: 3px solid var(--primary);
+  margin-top: 0.5rem;
+}
+
+.todo-edit-preset-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.todo-edit-preset-label span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.todo-edit-preset-select {
+  padding: 0.5rem 0.7rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+  max-width: 250px;
+}
+
+.todo-edit-preset-select:hover {
+  border-color: var(--primary);
+}
+
+.todo-edit-preset-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.1);
+}
+
+.todo-edit-preset-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.todo-edit-hours-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.todo-edit-hours-label span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.todo-edit-hours-input {
+  padding: 0.5rem 0.7rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  max-width: 150px;
+}
+
+.todo-edit-hours-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(81, 70, 255, 0.1);
+}
+
+.todo-edit-hours-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.todo-edit-repeat-hints {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+
+.todo-edit-repeat-hints .hint-label {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.todo-edit-repeat-hints .hint-value {
+  padding: 0.15rem 0.4rem;
+  background: var(--panel-bg);
+  border-radius: 5px;
+  border: 1px solid var(--panel-border);
+  color: var(--text-main);
+}
+
+.todo-edit-repeat-hints .hint-separator {
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  .todo-edit-repeat-option {
+    width: 100%;
+  }
+  
+  .todo-edit-hours-input {
+    max-width: 100%;
+  }
+}
+
+/* ==================== 编辑模式按钮样式 ==================== */
+.todo-edit-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  justify-content: flex-end;
+}
+
+.todo-edit-confirm,
+.todo-edit-cancel {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  text-transform: none;
+  letter-spacing: 0.3px;
+}
+
+.todo-edit-confirm {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(81, 70, 255, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.todo-edit-confirm::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.todo-edit-confirm:hover::before {
+  left: 100%;
+}
+
+.todo-edit-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(81, 70, 255, 0.45);
+}
+
+.todo-edit-confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(81, 70, 255, 0.3);
+}
+
+.todo-edit-cancel {
+  background: linear-gradient(135deg, #e8e8e8, #d0d0d0);
+  color: #666;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.todo-edit-cancel:hover {
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  color: var(--text-main);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(81, 70, 255, 0.2);
+}
+
+.todo-edit-cancel:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.todo-edit-confirm:focus-visible,
+.todo-edit-cancel:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* 防止单选按钮选中时的默认outline */
+.todo-edit-repeat-option input[type="radio"]:focus {
+  outline: none;
+}
+
+.todo-edit-repeat-option input[type="radio"]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+  .todo-edit-buttons {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  
+  .todo-edit-confirm,
+  .todo-edit-cancel {
+    width: 100%;
+    padding: 0.7rem;
+  }
+}
+
+/* 优化下拉菜单选项显示 */
+.custom-repeat-field select option {
+  padding: 0.8rem 1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--text-main);
+  background: var(--panel-bg);
+}
+
+.custom-repeat-field select option:hover,
+.custom-repeat-field select option:checked {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+}
+
+/* 自定义小时数输入框禁用状态 */
+.custom-repeat-field input[type="number"]:disabled {
+  background: var(--bg-accent);
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: var(--panel-border);
+}
+
+.custom-repeat-field input[type="number"]:disabled:hover {
+  border-color: var(--panel-border);
+  transform: none;
+}
+
+/* ========== 置顶开关样式 ========== */
+.pin-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 12px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  align-self: center;
+}
+
+.pin-toggle input[type="checkbox"] {
+  display: none;
+}
+
+.pin-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.pin-slider {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  left: 2px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 置顶状态 */
+.pin-toggle input:checked + .pin-switch {
+  background-color: #4CAF50;
+}
+
+.pin-toggle input:checked + .pin-switch .pin-slider {
+  transform: translateX(16px);
+}
+
+/* 悬停效果 */
+.pin-toggle:hover .pin-switch {
+  opacity: 0.9;
+}
+
+/* 进行中任务的样式（未来开始的任务） */
+.todo-item.future {
+  background: linear-gradient(90deg, #f0f4ff 0%, white 10%);
+  border-left: 3px solid #5b7dff;
+}
+
+/* 过期任务的样式（过去的任务） */
+.todo-item.past {
+  background: linear-gradient(90deg, #e6f7ff 0%, white 10%);
+  border-left: 3px solid #1E90FF;
+}
+
+/* 置顶任务的样式 - 优先级最高，放在最后确保不被覆盖 */
+.todo-item.pinned {
+  background: linear-gradient(90deg, #fff9e6 0%, white 10%) !important;
+  border-left: 3px solid #ffc107 !important;
+}
+
+/* 移动端适配 */
+
+.pin-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.18rem 0.5rem !important;
+  border-radius: 999px !important;
+  background: rgba(200,200,200,0.18) !important;
+  color: #9aa0b4 !important;
+  font-size: var(--badge-font-size) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  margin-left: 6px !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  transition: all 0.2s ease !important;
+}
+
+.pin-toggle input:checked ~ .pin-label {
+  background: rgba(56, 225, 166, 0.18) !important;
+  color: var(--success) !important;
+  font-weight: 600 !important;
+}
+
+/* 移动端置顶标签 */
+
+/* 标题行整体布局：复选框 + 标题 + 时间 + 徽章 */
+  .todo-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /* 缩小复选框尺寸与占位 */
+  .todo-item-header input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    transform: translateY(1px);
+    accent-color: var(--primary);
+  }
+
+  /* 将复选框放到最前（左边） */
+  .todo-item-header input[type="checkbox"] {
+    order: 0 !important;
+  }
+
+  /* 调整任务标题的对齐 */
+  .todo-item-header .todo-title {
+    order: 1 !important;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* 时间与徽章在后 */
+  .todo-item-header .todo-meta,
+  .todo-item-header .pin-toggle {
+    order: 2 !important;
+  }
+
+  /* 整体卡片左右空间缩小一点 */
+  .todo-item {
+    border-radius: 14px !important;
+  }
+}
+
+/* ==================== 手机端：将复选框移动到任务底部，与编辑删除同一行 ==================== */
+
+/* ==================== 手机端：复选框与编辑删除同行 ==================== */
+
+/* Hide native checkbox in todo-item-header across all screens */
+.todo-item-header input[type="checkbox"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+/* ==================== 字体大小控制按钮 ==================== */
+.font-size-control {
+  display: inline-flex;
+  gap: 0.2rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 0.15rem;
+  border: 1px solid rgba(108, 114, 139, 0.2);
+  margin-left: 0.5rem;
+}
+
+.font-size-btn {
+  padding: 0.2rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.font-size-btn {
+  position: relative;
+  z-index: 5;
+}
+
+.font-size-btn.font-size-cycle,
+.font-size-btn.font-size-cycle.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+
+.font-size-btn:hover {
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+}
+
+.font-size-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* 字体大小样式 */
+.todo-content.font-small {
+  font-size: 0.75rem !important;
+}
+
+.todo-content.font-medium {
+  font-size: 1rem !important;
+}
+
+.todo-content.font-large {
+  font-size: 1.2rem !important;
+}
+
+/* 黑暗模式适配 */
+@media (prefers-color-scheme: dark) {
+  .font-size-control {
+    background: rgba(18, 22, 46, 0.8);
+    border-color: rgba(133, 140, 255, 0.3);
+  }
+  
+  .font-size-btn:hover {
+    background: rgba(141, 136, 255, 0.2);
+    color: var(--primary-dark);
+  }
+}
+
+/* 移动端适配 */
+
+/* ==================== 行顺序控制按钮 ==================== */
+.line-order-control {
+  display: inline-flex;
+  gap: 0.2rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 0.15rem;
+  border: 1px solid rgba(108, 114, 139, 0.2);
+  margin-left: 0.5rem;
+}
+
+.line-order-btn {
+  padding: 0.2rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.line-order-btn {
+  position: relative;
+  z-index: 20; /* 高于 checkbox 的点击层级 */
+}
+
+.line-order-cycle {
+  position: relative;
+  z-index: 20;
+}
+
+
+.line-order-btn:hover {
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+}
+
+.line-order-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* 黑暗模式适配 */
+@media (prefers-color-scheme: dark) {
+  .line-order-control {
+    background: rgba(18, 22, 46, 0.8);
+    border-color: rgba(133, 140, 255, 0.3);
+  }
+
+  .line-order-btn:hover {
+    background: rgba(141, 136, 255, 0.2);
+    color: var(--primary-dark);
+  }
+}
+
+/* 移动端适配 */
+
+/* 手机端日期输入框紧凑显示 */
+
+/* Toast动画 */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* 昵称badge可编辑提示 */
+#user-badge {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+#user-badge:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+#user-badge:active {
+  transform: scale(0.98);
+}
+
+/* ==================== 管理员面板移动端适配 ==================== */
+
+/* ========== 加载指示器样式 ========== */
+
+/* 全屏加载遮罩 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* 当 body 有 loading 类时显示 */
+body.loading .loading-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 加载指示器容器 */
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* 旋转圆环 */
+.loading-spinner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 4px solid rgba(81, 70, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 旋转动画 */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 加载文字 */
+.loading-text {
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 500;
+  text-align: center;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 加载提示文字 */
+.loading-hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .loading-overlay {
+    background: rgba(18, 20, 40, 0.95);
+  }
+
+  .loading-spinner::before {
+    border-color: rgba(81, 70, 255, 0.2);
+    border-top-color: var(--primary);
+  }
+}
+
+/* ==================== 分享对话框手机端自适应 ==================== */
+
+/* ==================== 分享历史撤回功能样式 ==================== */
+.share-history-hint {
+  margin: 1.2rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.08));
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.history-info {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.history-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.history-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+#share-history-count {
+  font-weight: 700;
+  color: #ff9800;
+}
+
+.revoke-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.2rem;
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
+  align-self: flex-start;
+}
+
+.revoke-share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.35);
+  background: linear-gradient(135deg, #fb8c00, #ef6c00);
+}
+
+.revoke-share-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+}
+
+.revoke-share-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.revoke-icon {
+  font-size: 1.1rem;
+}
+
+.revoke-text {
+  font-size: 0.95rem;
+}
+
+/* 手机端优化 */
+
+/* 刷新记录按钮 */
+.refresh-history-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.2rem;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  align-self: flex-start;
+}
+
+.refresh-history-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.35);
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+}
+
+.refresh-history-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+}
+
+.refresh-history-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.refresh-icon {
+  font-size: 1.1rem;
+}
+
+.refresh-text {
+  font-weight: 600;
+}
+
+/* 分享历史操作按钮容器（让两个按钮并排显示） */
+.share-history-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+/* 手机端：简化按钮文字并自适应宽度 */
+
+.share-history-hint[hidden] {
+  display: none !important;
+}
+
+/* 手机端：撤回/刷新按钮横向居中 */
+
+/* ==================== 全屏显示控制按钮 ==================== */
+.fullscreen-control {
+  display: inline-flex;
+  gap: 0.2rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 0.15rem;
+  border: 1px solid rgba(108, 114, 139, 0.2);
+  margin-left: 0.5rem;
+}
+
+.fullscreen-btn {
+  padding: 0.2rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fullscreen-btn:hover {
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+}
+
+.fullscreen-btn[data-fullscreen="true"] {
+  background: var(--primary);
+  color: white;
+}
+
+/* 全屏模式样式 */
+
+/* ==================== 全屏切换按钮 ==================== */
+.fullscreen-toggle-btn {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgba(108, 114, 139, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--muted);
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 0.5rem;
+  line-height: 1;
+}
+
+.fullscreen-toggle-btn:hover {
+  background: rgba(81, 70, 255, 0.1);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* 全屏内容样式 - 移除高度限制，其他保持不变 */
+.todo-content.fullscreen-content {
+  max-height: none !important;
+  overflow-y: visible !important;
+}
+
+/* 黑暗模式适配 */
+@media (prefers-color-scheme: dark) {
+  .fullscreen-toggle-btn {
+    background: rgba(18, 22, 46, 0.8);
+    border-color: rgba(133, 140, 255, 0.3);
+  }
+
+  .fullscreen-toggle-btn:hover {
+    background: rgba(141, 136, 255, 0.2);
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+  }
+}
+
+/* 移动端适配 */
+
+/* 底部全屏按钮默认隐藏（仅在移动端显示） */
+.fullscreen-toggle-btn-bottom {
+  display: none;
+}
+
+/* 移动端显示底部全屏按钮 */
+@media (max-width: 720px) {
+  .fullscreen-toggle-btn-bottom {
+    display: inline-block;
+  }
+}
+
+/* 黑暗模式适配 */
+@media (max-width: 720px) and (prefers-color-scheme: dark) {
+  .fullscreen-toggle-btn-bottom {
+    background: rgba(18, 22, 46, 0.8);
+    border-color: rgba(133, 140, 255, 0.3);
+  }
+
+  .fullscreen-toggle-btn-bottom:hover {
+    background: rgba(141, 136, 255, 0.2);
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+  }
+}
+
+/* ==================== 可折叠内容区域背景色 ==================== */
+/* 给折叠区域添加背景色，使其与其他部分区分 */
+
+/* ==================== 可折叠内容区域背景色 ==================== */
+/* 给折叠区域添加背景色，使其与其他部分区分 */
+.panel-header {
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.08) 0%,
+    rgba(79, 70, 229, 0.08) 50%,
+    rgba(37, 99, 235, 0.08) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 1rem 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+#collapsible-controls {
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.08) 0%,
+    rgba(79, 70, 229, 0.08) 50%,
+    rgba(37, 99, 235, 0.08) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* 黑暗模式适配 */
+@media (prefers-color-scheme: dark) {
+  .panel-header,
+  #collapsible-controls {
+    background: linear-gradient(135deg,
+      rgba(139, 92, 246, 0.12) 0%,
+      rgba(79, 70, 229, 0.12) 50%,
+      rgba(37, 99, 235, 0.12) 100%);
+    border-color: rgba(139, 92, 246, 0.25);
+  }
+}
+
+/* 移动端适配 */
+
+/* 折叠状态下减少panel-header的边距 */
+.panel-header:has(.collapsible-content.collapsed) {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  padding: 0.5rem 1.5rem;
+}
+
+/* 移动端折叠状态 */
+
+/* PC端折叠状态下进一步减少间距 */
+@media (min-width: 721px) {
+  .panel-header:has(.collapsible-content.collapsed) {
+    margin-top: 0.1rem;
+    margin-bottom: 0;
+    padding: 0.1rem 1.5rem;
+    min-height: 0;
+  }
+}
+
+/* 折叠状态下的标题栏和面板位置调整 - 使用CSS类而非inline样式 */
+.title-row:has(.header-collapse-btn.collapsed) {
+
+/* 折叠状态下的标题栏和面板位置调整 */
+
+/* 手机端按钮布局优化 */
+
+/* 小屏手机进一步优化按钮尺寸 */
+
+/* 移动端：将完成checkbox移到标题左侧，释放底部按钮空间 */
+
+/* 超小屏幕进一步优化 */
+
+/* ==================== 分享对话框附件信息样式 ==================== */
+.share-attachment-info {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+  border-radius: 8px;
+  border: 1px solid #d0d9e6;
+}
+
+.attachment-info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.attachment-icon {
+  font-size: 1.2rem;
+}
+
+.attachment-text {
+  font-size: 0.95rem;
+}
+
+#share-attachment-count {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.attachment-info-details {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.attachment-item-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.attachment-item-preview:not(:last-child) {
+  border-bottom: 1px solid #e8eef5;
+}
+
+.attachment-item-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.attachment-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-item-size {
+  flex-shrink: 0;
+  color: #a0aec0;
+  font-size: 0.8rem;
+}
+
+.attachment-info-note {
+  margin: 0.75rem 0 0 0;
+  font-size: 0.85rem;
+  color: #667eea;
+  font-style: italic;
+}
+
+/* 移动端适配 */
+
+/* ==================== 页脚样式 ==================== */
+.app-footer {
+  width: 100%;
+  max-width: 680px;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin: 2rem auto 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  background: transparent;
+}
+
+.footer-developer {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.footer-email {
+  color: #8b5cf6;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-email:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+/* 移动端页脚适配 - 最终修复 */
+
+/* 超小屏幕优化（分享对话框） */
+
+/* 超小屏幕适配（重复选项） */
+
+/* ==================== 分享方式选择弹出菜单样式 ==================== */
+.share-choice-menu {
+  position: fixed;
+  background: #ffffff;
+  border: 2px solid var(--panel-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 99999;  /* 确保在最顶层 */
+  min-width: 120px;
+  overflow: hidden;
+  animation: menuFadeIn 0.15s ease;
+}
+
+.share-choice-menu[hidden] {
+  display: none;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.share-choice-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: rgba(81, 70, 255, 0.05); /* 淡淡的主题色背景 */
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-size: 1.1rem;
+  border-radius: 6px; /* 添加圆角 */
+  margin-bottom: 4px; /* 选项之间的间距 */
+}
+
+/* 确保<a>标签的链接样式与按钮一致 */
+a.share-choice-item {
+  text-decoration: none;
+  color: var(--text-main);
+  display: flex; /* 确保flex布局 */
+}
+
+a.share-choice-item:visited {
+  color: var(--text-main);
+}
+
+.share-choice-item:hover {
+  background: rgba(81, 70, 255, 0.12); /* 悬停时背景更明显 */
+  transform: translateX(2px); /* 轻微的移动效果 */
+}
+
+.share-choice-item:active {
+  background: rgba(81, 70, 255, 0.1);
+}
+
+.share-choice-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.share-choice-text {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .share-choice-menu {
+    background: #1a1e2e;
+    border-color: rgba(133, 140, 255, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  .share-choice-item {
+    background: rgba(81, 70, 255, 0.15); /* 深色模式下的背景 */
+  }
+
+  .share-choice-item:hover {
+    background: rgba(81, 70, 255, 0.3); /* 深色模式下的悬停背景 */
+  }
+}
+
+/* ==================== 旧的分享对话框样式（已废弃，保留以防回滚） ==================== */
+.share-choice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;  /* 提高优先级，确保在其他元素之上 */
+  padding: 1rem;
+}
+
+/* 隐藏状态 */
+.share-choice-overlay[hidden] {
+  display: none;
+}
+
+.share-choice-dialog {
+  background: var(--panel-bg);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px var(--shadow);
+  border: 1px solid var(--panel-border);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.share-choice-dialog h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.share-choice-hint {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+}
+
+.share-choice-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.share-choice-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.2rem 1.5rem;
+  border: 2px solid var(--panel-border);
+  border-radius: 12px;
+  background: var(--bg-accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.share-choice-btn:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, var(--bg-accent), var(--panel-bg));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(81, 70, 255, 0.2);
+}
+
+.share-choice-btn:active {
+  transform: translateY(0);
+}
+
+.share-choice-wechat:hover {
+  border-color: #1AAD19;
+  box-shadow: 0 4px 12px rgba(26, 173, 25, 0.2);
+}
+
+.share-choice-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.share-choice-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.share-choice-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
+  display: block;
+}
+
+.share-choice-cancel {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-choice-cancel:hover {
+  background: var(--bg-accent);
+  color: var(--text-main);
+  border-color: var(--primary);
+}
+
+/* 深色模式优化 */
+@media (prefers-color-scheme: dark) {
+  .share-choice-dialog {
+    background: linear-gradient(135deg, var(--panel-bg), rgba(18, 22, 46, 0.95));
+  }
+
+  .share-choice-btn {
+    background: rgba(18, 22, 46, 0.8);
+  }
+
+  .share-choice-btn:hover {
+    background: linear-gradient(135deg, rgba(81, 70, 255, 0.15), rgba(18, 22, 46, 0.9));
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .share-choice-dialog {
+    padding: 1.5rem 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .share-choice-dialog h2 {
+    font-size: 1.3rem;
+  }
+
+  .share-choice-btn {
+    padding: 1rem 1.2rem;
+  }
+
+  .share-choice-icon {
+    font-size: 1.8rem;
+  }
+
+  .share-choice-text {
+    font-size: 1rem;
+  }
+
+  .share-choice-desc {
+    font-size: 0.8rem;
+  }
+}
+
+/* 超小屏幕适配 */
+@media (max-width: 480px) {
+  .share-choice-dialog {
+    padding: 1.2rem 0.8rem;
+  }
+
+  .share-choice-dialog h2 {
+    font-size: 1.2rem;
+  }
+
+  .share-choice-btn {
+    padding: 0.9rem 1rem;
+  }
+
+  .share-choice-icon {
+    font-size: 1.6rem;
+  }
+
+  .share-choice-text {
+    font-size: 0.95rem;
+  }
+
+  .share-choice-desc {
+    font-size: 0.75rem;
+  }
+}
+
+/* ==================== 复制分享按钮样式（已废弃，保留以防需要） ==================== */
+.copy-share-btn {
+  background: linear-gradient(135deg, #1AAD19, #2DC84D);
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(26, 173, 25, 0.2);
+}
+
+.copy-share-btn:hover {
+  background: linear-gradient(135deg, #16941A, #25A83D);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 173, 25, 0.3);
+}
+
+.copy-share-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(26, 173, 25, 0.2);
+}
+
+/* 深色模式下的复制分享按钮 */
+@media (prefers-color-scheme: dark) {
+  .copy-share-btn {
+    background: linear-gradient(135deg, #1AAD19, #2DC84D);
+    box-shadow: 0 2px 8px rgba(26, 173, 25, 0.3);
+  }
+
+  .copy-share-btn:hover {
+    background: linear-gradient(135deg, #2DC84D, #3FD85F);
+    box-shadow: 0 4px 12px rgba(26, 173, 25, 0.4);
+  }
+}
+
+/* 移动端按钮适配 */
+@media (max-width: 768px) {
+  .copy-share-btn {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.65rem;
+  }
+}
+
+/* 超小屏幕适配 */
+@media (max-width: 480px) {
+  .copy-share-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Toast 提示样式（如果需要额外定制） */
+.toast {
+  font-family: 'SourceHanSansCN', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.toast.toast-success {
+  background: #38c985 !important;
+}
+
+.toast.toast-error {
+  background: #ef5f7a !important;
+}
+
+.toast.toast-info {
+  background: #5146ff !important;
+}
+
+
+/* ============ 协作共享样式 ============ */
+
+/* 协作任务标识 */
+.todo-item.collaborative {
+  border-left: 3px solid #5146ff;
+}
+
+.collaborate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.4rem;
+  background: linear-gradient(135deg, #5146ff, #7c3aed);
+  color: #fff;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.collaborate-badge:hover {
+  transform: scale(1.05);
+}
+
+.collaborate-badge-icon {
+  font-size: 0.8rem;
+}
+
+/* 协作弹窗样式已迁移到 collaborate.css */
+
+/* 移动端适配 */
+@media (max-width: 720px) {
+  .collaborate-badge {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.3rem;
+  }
+}
+
+
+/* Local single-user build: hide account, admin, and multi-user sharing controls. */
+#user-id-overlay,
+#admin-login-overlay,
+#share-overlay,
+#share-choice-menu,
+.share-btn,
+.admin-login-btn,
+.collaborate-badge {
+  display: none !important;
+}
