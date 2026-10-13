@@ -1,5 +1,11 @@
 # Sofia 记事清单（单机版）
 
+<!-- en-intro -->
+**Sofia Todo** — a local-first single-user todo app (Flask + SQLite) with Markdown notes, attachments, recurring tasks, search and filters.
+<!-- /en-intro -->
+
+---
+
 基于 Flask 的本地记事与待办应用。此版本固定为一个本机用户，不需要注册、登录、用户 ID、远程后端或数据库。Flask 只监听 127.0.0.1，其他设备无法通过局域网访问。
 
 ## 功能
